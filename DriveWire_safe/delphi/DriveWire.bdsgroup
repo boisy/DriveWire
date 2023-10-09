@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<PersonalityInfo>
+		<Option>
+			<Option Name="Personality">Default.Personality</Option>
+			<Option Name="ProjectType"></Option>
+			<Option Name="Version">1.0</Option>
+			<Option Name="GUID">{E5622D18-E2A2-4DAB-994C-DFC5EF2571EA}</Option>
+		</Option>
+	</PersonalityInfo>
+	<Default.Personality>  <Projects>
+      <Projects Name="DriveWire.exe">DriveWire.bdsproj</Projects>
+      <Projects Name="VDrive.bpl">VDrive.bdsproj</Projects>
+      <Projects Name="Targets">DriveWire.exe VDrive.bpl</Projects>
+    </Projects>
+    <Dependencies>
+      <Dependency GUID="{3C2369CD-96FD-453E-B289-EDB8FEDB7D98}">
+        <Dependency GUID="{15F46C2C-3976-46F0-95A5-68F6CE6A236E}"/>
+      </Dependency>
+    </Dependencies>
+  </Default.Personality>
+</BorlandProject>

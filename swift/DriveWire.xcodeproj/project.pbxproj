@@ -1,0 +1,689 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6818E5A12AC9D5E200A6C300 /* DriveWireHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6818E5A02AC9D5E200A6C300 /* DriveWireHost.swift */; };
+		6818E5A22AC9D6A200A6C300 /* DriveWireHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6818E5A02AC9D5E200A6C300 /* DriveWireHost.swift */; };
+		6818E8112AC7786C00CD3A16 /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 6818E8102AC7786C00CD3A16 /* CocoaLumberjack */; };
+		6818E8132AC7786C00CD3A16 /* CocoaLumberjackSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6818E8122AC7786C00CD3A16 /* CocoaLumberjackSwift */; };
+		6818E8152AC7786C00CD3A16 /* CocoaLumberjackSwiftLogBackend in Frameworks */ = {isa = PBXBuildFile; productRef = 6818E8142AC7786C00CD3A16 /* CocoaLumberjackSwiftLogBackend */; };
+		686E2FC52AC8A5B200F94CFD /* DriveWire.docc in Sources */ = {isa = PBXBuildFile; fileRef = 686E2FC42AC8A5B200F94CFD /* DriveWire.docc */; };
+		68A4A0CF2AC723290041F161 /* DriveWireApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A4A0CE2AC723290041F161 /* DriveWireApp.swift */; };
+		68A4A0D12AC723290041F161 /* DriveWireDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A4A0D02AC723290041F161 /* DriveWireDocument.swift */; };
+		68A4A0D32AC723290041F161 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A4A0D22AC723290041F161 /* ContentView.swift */; };
+		68A4A0D52AC7232A0041F161 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 68A4A0D42AC7232A0041F161 /* Assets.xcassets */; };
+		68A4A0D82AC7232A0041F161 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 68A4A0D72AC7232A0041F161 /* Preview Assets.xcassets */; };
+		68A4A0E72AC723670041F161 /* DriveWireTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A4A0E62AC723670041F161 /* DriveWireTests.swift */; };
+		68A4A0EF2AC723820041F161 /* DriveWireSerialDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A4A0ED2AC723820041F161 /* DriveWireSerialDriver.swift */; };
+		68A4A0F32AC723920041F161 /* ORSSerial in Frameworks */ = {isa = PBXBuildFile; productRef = 68A4A0F22AC723920041F161 /* ORSSerial */; };
+		68A842102AD329B6009BE6D3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A8420F2AD329B6009BE6D3 /* main.swift */; };
+		68A842142AD3329A009BE6D3 /* DriveWireHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6818E5A02AC9D5E200A6C300 /* DriveWireHost.swift */; };
+		68A842152AD3329D009BE6D3 /* DriveWireSerialDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A4A0ED2AC723820041F161 /* DriveWireSerialDriver.swift */; };
+		68A842182AD3697C009BE6D3 /* ORSSerial in Frameworks */ = {isa = PBXBuildFile; productRef = 68A842172AD3697C009BE6D3 /* ORSSerial */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		68A4A0E82AC723670041F161 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 68A4A0C32AC723290041F161 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 68A4A0CA2AC723290041F161;
+			remoteInfo = DriveWireSwift;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		68A8420B2AD329B6009BE6D3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		68015B842AD470CB00AB717A /* DriveWireCmd.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = DriveWireCmd.xctestplan; sourceTree = "<group>"; };
+		6818E5A02AC9D5E200A6C300 /* DriveWireHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveWireHost.swift; sourceTree = "<group>"; };
+		686E2FC42AC8A5B200F94CFD /* DriveWire.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = DriveWire.docc; sourceTree = "<group>"; };
+		68A4A0CB2AC723290041F161 /* DriveWire.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DriveWire.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		68A4A0CE2AC723290041F161 /* DriveWireApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveWireApp.swift; sourceTree = "<group>"; };
+		68A4A0D02AC723290041F161 /* DriveWireDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveWireDocument.swift; sourceTree = "<group>"; };
+		68A4A0D22AC723290041F161 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		68A4A0D42AC7232A0041F161 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		68A4A0D72AC7232A0041F161 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		68A4A0D92AC7232A0041F161 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		68A4A0DA2AC7232A0041F161 /* DriveWire.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DriveWire.entitlements; sourceTree = "<group>"; };
+		68A4A0E42AC723670041F161 /* DriveWireTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DriveWireTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		68A4A0E62AC723670041F161 /* DriveWireTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveWireTests.swift; sourceTree = "<group>"; };
+		68A4A0ED2AC723820041F161 /* DriveWireSerialDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveWireSerialDriver.swift; sourceTree = "<group>"; };
+		68A8420D2AD329B6009BE6D3 /* DriveWireCmd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DriveWireCmd; sourceTree = BUILT_PRODUCTS_DIR; };
+		68A8420F2AD329B6009BE6D3 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		68A8421B2AD4378E009BE6D3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		68A4A0C82AC723290041F161 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6818E8112AC7786C00CD3A16 /* CocoaLumberjack in Frameworks */,
+				68A4A0F32AC723920041F161 /* ORSSerial in Frameworks */,
+				6818E8152AC7786C00CD3A16 /* CocoaLumberjackSwiftLogBackend in Frameworks */,
+				6818E8132AC7786C00CD3A16 /* CocoaLumberjackSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		68A4A0E12AC723670041F161 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		68A8420A2AD329B6009BE6D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				68A842182AD3697C009BE6D3 /* ORSSerial in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		68A4A0C22AC723290041F161 = {
+			isa = PBXGroup;
+			children = (
+				68A8421B2AD4378E009BE6D3 /* README.md */,
+				68015B842AD470CB00AB717A /* DriveWireCmd.xctestplan */,
+				68A4A0CD2AC723290041F161 /* DriveWire */,
+				68A4A0E52AC723670041F161 /* DriveWireTests */,
+				68A8420E2AD329B6009BE6D3 /* DriveWireCmd */,
+				68A4A0CC2AC723290041F161 /* Products */,
+				68A842162AD3697C009BE6D3 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		68A4A0CC2AC723290041F161 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				68A4A0CB2AC723290041F161 /* DriveWire.app */,
+				68A4A0E42AC723670041F161 /* DriveWireTests.xctest */,
+				68A8420D2AD329B6009BE6D3 /* DriveWireCmd */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		68A4A0CD2AC723290041F161 /* DriveWire */ = {
+			isa = PBXGroup;
+			children = (
+				686E2FC42AC8A5B200F94CFD /* DriveWire.docc */,
+				68A4A0F52AC724CF0041F161 /* Model */,
+				68A4A0F42AC723C00041F161 /* Drivers */,
+				68A4A0CE2AC723290041F161 /* DriveWireApp.swift */,
+				68A4A0D02AC723290041F161 /* DriveWireDocument.swift */,
+				68A4A0D22AC723290041F161 /* ContentView.swift */,
+				68A4A0D42AC7232A0041F161 /* Assets.xcassets */,
+				68A4A0D92AC7232A0041F161 /* Info.plist */,
+				68A4A0DA2AC7232A0041F161 /* DriveWire.entitlements */,
+				68A4A0D62AC7232A0041F161 /* Preview Content */,
+			);
+			path = DriveWire;
+			sourceTree = "<group>";
+		};
+		68A4A0D62AC7232A0041F161 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				68A4A0D72AC7232A0041F161 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		68A4A0E52AC723670041F161 /* DriveWireTests */ = {
+			isa = PBXGroup;
+			children = (
+				68A4A0E62AC723670041F161 /* DriveWireTests.swift */,
+			);
+			path = DriveWireTests;
+			sourceTree = "<group>";
+		};
+		68A4A0F42AC723C00041F161 /* Drivers */ = {
+			isa = PBXGroup;
+			children = (
+				68A4A0ED2AC723820041F161 /* DriveWireSerialDriver.swift */,
+			);
+			path = Drivers;
+			sourceTree = "<group>";
+		};
+		68A4A0F52AC724CF0041F161 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6818E5A02AC9D5E200A6C300 /* DriveWireHost.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		68A8420E2AD329B6009BE6D3 /* DriveWireCmd */ = {
+			isa = PBXGroup;
+			children = (
+				68A8420F2AD329B6009BE6D3 /* main.swift */,
+			);
+			path = DriveWireCmd;
+			sourceTree = "<group>";
+		};
+		68A842162AD3697C009BE6D3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		68A4A0CA2AC723290041F161 /* DriveWire */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 68A4A0DD2AC7232A0041F161 /* Build configuration list for PBXNativeTarget "DriveWire" */;
+			buildPhases = (
+				68A4A0C72AC723290041F161 /* Sources */,
+				68A4A0C82AC723290041F161 /* Frameworks */,
+				68A4A0C92AC723290041F161 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DriveWire;
+			packageProductDependencies = (
+				68A4A0F22AC723920041F161 /* ORSSerial */,
+				6818E8102AC7786C00CD3A16 /* CocoaLumberjack */,
+				6818E8122AC7786C00CD3A16 /* CocoaLumberjackSwift */,
+				6818E8142AC7786C00CD3A16 /* CocoaLumberjackSwiftLogBackend */,
+			);
+			productName = DriveWireSwift;
+			productReference = 68A4A0CB2AC723290041F161 /* DriveWire.app */;
+			productType = "com.apple.product-type.application";
+		};
+		68A4A0E32AC723670041F161 /* DriveWireTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 68A4A0EA2AC723670041F161 /* Build configuration list for PBXNativeTarget "DriveWireTests" */;
+			buildPhases = (
+				68A4A0E02AC723670041F161 /* Sources */,
+				68A4A0E12AC723670041F161 /* Frameworks */,
+				68A4A0E22AC723670041F161 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				68A4A0E92AC723670041F161 /* PBXTargetDependency */,
+			);
+			name = DriveWireTests;
+			productName = DriveWireSwiftTests;
+			productReference = 68A4A0E42AC723670041F161 /* DriveWireTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		68A8420C2AD329B6009BE6D3 /* DriveWireCmd */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 68A842132AD329B6009BE6D3 /* Build configuration list for PBXNativeTarget "DriveWireCmd" */;
+			buildPhases = (
+				68A842092AD329B6009BE6D3 /* Sources */,
+				68A8420A2AD329B6009BE6D3 /* Frameworks */,
+				68A8420B2AD329B6009BE6D3 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				68A8421A2AD369E7009BE6D3 /* PBXTargetDependency */,
+			);
+			name = DriveWireCmd;
+			packageProductDependencies = (
+				68A842172AD3697C009BE6D3 /* ORSSerial */,
+			);
+			productName = DriveWireCmd;
+			productReference = 68A8420D2AD329B6009BE6D3 /* DriveWireCmd */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		68A4A0C32AC723290041F161 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					68A4A0CA2AC723290041F161 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					68A4A0E32AC723670041F161 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = 68A4A0CA2AC723290041F161;
+					};
+					68A8420C2AD329B6009BE6D3 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 68A4A0C62AC723290041F161 /* Build configuration list for PBXProject "DriveWire" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 68A4A0C22AC723290041F161;
+			packageReferences = (
+				68A4A0F12AC723920041F161 /* XCRemoteSwiftPackageReference "ORSSerialPort" */,
+				6818E80F2AC7786C00CD3A16 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */,
+			);
+			productRefGroup = 68A4A0CC2AC723290041F161 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				68A4A0CA2AC723290041F161 /* DriveWire */,
+				68A4A0E32AC723670041F161 /* DriveWireTests */,
+				68A8420C2AD329B6009BE6D3 /* DriveWireCmd */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		68A4A0C92AC723290041F161 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				68A4A0D82AC7232A0041F161 /* Preview Assets.xcassets in Resources */,
+				68A4A0D52AC7232A0041F161 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		68A4A0E22AC723670041F161 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		68A4A0C72AC723290041F161 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				68A4A0D12AC723290041F161 /* DriveWireDocument.swift in Sources */,
+				6818E5A12AC9D5E200A6C300 /* DriveWireHost.swift in Sources */,
+				68A4A0CF2AC723290041F161 /* DriveWireApp.swift in Sources */,
+				68A4A0D32AC723290041F161 /* ContentView.swift in Sources */,
+				68A4A0EF2AC723820041F161 /* DriveWireSerialDriver.swift in Sources */,
+				686E2FC52AC8A5B200F94CFD /* DriveWire.docc in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		68A4A0E02AC723670041F161 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6818E5A22AC9D6A200A6C300 /* DriveWireHost.swift in Sources */,
+				68A4A0E72AC723670041F161 /* DriveWireTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		68A842092AD329B6009BE6D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				68A842102AD329B6009BE6D3 /* main.swift in Sources */,
+				68A842142AD3329A009BE6D3 /* DriveWireHost.swift in Sources */,
+				68A842152AD3329D009BE6D3 /* DriveWireSerialDriver.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		68A4A0E92AC723670041F161 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 68A4A0CA2AC723290041F161 /* DriveWire */;
+			targetProxy = 68A4A0E82AC723670041F161 /* PBXContainerItemProxy */;
+		};
+		68A8421A2AD369E7009BE6D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 68A842192AD369E7009BE6D3 /* ORSSerial */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		68A4A0DB2AC7232A0041F161 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		68A4A0DC2AC7232A0041F161 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		68A4A0DE2AC7232A0041F161 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DriveWire/DriveWire.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"DriveWire/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DriveWire/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boisypitre.DriveWire.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		68A4A0DF2AC7232A0041F161 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DriveWire/DriveWire.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"DriveWire/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DriveWire/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boisypitre.DriveWire.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		68A4A0EB2AC723670041F161 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boisypitre.DriveWire.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DriveWire.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DriveWire";
+			};
+			name = Debug;
+		};
+		68A4A0EC2AC723670041F161 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boisypitre.DriveWire.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DriveWire.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DriveWire";
+			};
+			name = Release;
+		};
+		68A842112AD329B6009BE6D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 13.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		68A842122AD329B6009BE6D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 13.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		68A4A0C62AC723290041F161 /* Build configuration list for PBXProject "DriveWire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				68A4A0DB2AC7232A0041F161 /* Debug */,
+				68A4A0DC2AC7232A0041F161 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		68A4A0DD2AC7232A0041F161 /* Build configuration list for PBXNativeTarget "DriveWire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				68A4A0DE2AC7232A0041F161 /* Debug */,
+				68A4A0DF2AC7232A0041F161 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		68A4A0EA2AC723670041F161 /* Build configuration list for PBXNativeTarget "DriveWireTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				68A4A0EB2AC723670041F161 /* Debug */,
+				68A4A0EC2AC723670041F161 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		68A842132AD329B6009BE6D3 /* Build configuration list for PBXNativeTarget "DriveWireCmd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				68A842112AD329B6009BE6D3 /* Debug */,
+				68A842122AD329B6009BE6D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6818E80F2AC7786C00CD3A16 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CocoaLumberjack/CocoaLumberjack.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.8.1;
+			};
+		};
+		68A4A0F12AC723920041F161 /* XCRemoteSwiftPackageReference "ORSSerialPort" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/armadsen/ORSSerialPort.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6818E8102AC7786C00CD3A16 /* CocoaLumberjack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6818E80F2AC7786C00CD3A16 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
+			productName = CocoaLumberjack;
+		};
+		6818E8122AC7786C00CD3A16 /* CocoaLumberjackSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6818E80F2AC7786C00CD3A16 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
+			productName = CocoaLumberjackSwift;
+		};
+		6818E8142AC7786C00CD3A16 /* CocoaLumberjackSwiftLogBackend */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6818E80F2AC7786C00CD3A16 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
+			productName = CocoaLumberjackSwiftLogBackend;
+		};
+		68A4A0F22AC723920041F161 /* ORSSerial */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68A4A0F12AC723920041F161 /* XCRemoteSwiftPackageReference "ORSSerialPort" */;
+			productName = ORSSerial;
+		};
+		68A842172AD3697C009BE6D3 /* ORSSerial */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68A4A0F12AC723920041F161 /* XCRemoteSwiftPackageReference "ORSSerialPort" */;
+			productName = ORSSerial;
+		};
+		68A842192AD369E7009BE6D3 /* ORSSerial */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68A4A0F12AC723920041F161 /* XCRemoteSwiftPackageReference "ORSSerialPort" */;
+			productName = ORSSerial;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 68A4A0C32AC723290041F161 /* Project object */;
+}

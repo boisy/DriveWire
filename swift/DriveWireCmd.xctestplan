@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "A6EF1A9E-79D0-4116-8499-ED4B19118220",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:DriveWire.xcodeproj",
+      "identifier" : "68A8420C2AD329B6009BE6D3",
+      "name" : "DriveWireCmd"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:DriveWire.xcodeproj",
+        "identifier" : "68A4A0E32AC723670041F161",
+        "name" : "DriveWireTests"
+      }
+    }
+  ],
+  "version" : 1
+}

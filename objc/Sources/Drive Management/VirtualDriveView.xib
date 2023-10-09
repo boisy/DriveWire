@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="VirtualDriveController">
+            <connections>
+                <outlet property="diskLabel" destination="138" id="139"/>
+                <outlet property="driveDoor" destination="136" id="142"/>
+                <outlet property="driveFacePlate" destination="137" id="140"/>
+                <outlet property="driveNumber" destination="131" id="141"/>
+                <outlet property="readLED" destination="135" id="144"/>
+                <outlet property="virtualDriveView" destination="130" id="143"/>
+                <outlet property="writeLED" destination="134" id="145"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="130" userLabel="BPVirtualDriveView" customClass="VirtualDriveView">
+            <rect key="frame" x="0.0" y="0.0" width="237" height="67"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <imageView id="137">
+                    <rect key="frame" x="0.0" y="0.0" width="237" height="68"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="axesIndependently" image="drive" id="162"/>
+                    <connections>
+                        <action selector="selectAndInsertCartridge:" target="-2" id="153"/>
+                    </connections>
+                </imageView>
+                <imageView id="136">
+                    <rect key="frame" x="37" y="14" width="162" height="39"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="axesIndependently" image="driveface" id="161"/>
+                    <connections>
+                        <action selector="selectAndInsertCartridge:" target="-2" id="146"/>
+                    </connections>
+                </imageView>
+                <button id="133">
+                    <rect key="frame" x="38" y="32" width="162" height="19"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <buttonCell key="cell" type="square" title="Button" bezelStyle="shadowlessSquare" alignment="center" transparent="YES" inset="2" id="158">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="selectAndInsertCartridge:" target="-2" id="154"/>
+                    </connections>
+                </button>
+                <textField verticalHuggingPriority="750" id="138">
+                    <rect key="frame" x="63" y="39" width="113" height="10"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" id="163">
+                        <font key="font" metaFont="miniSystem"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button id="132">
+                    <rect key="frame" x="59" y="14" width="17" height="14"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <buttonCell key="cell" type="square" title="Button" bezelStyle="shadowlessSquare" alignment="center" transparent="YES" inset="2" id="157">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="ejectCartridge:" target="-2" id="149"/>
+                    </connections>
+                </button>
+                <imageView id="135">
+                    <rect key="frame" x="110" y="19" width="8" height="4"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="axesIndependently" image="greenled" id="160"/>
+                </imageView>
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="131" userLabel="0">
+                    <rect key="frame" x="1" y="24" width="41" height="18"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" id="156">
+                        <font key="font" metaFont="systemBold" size="15"/>
+                        <string key="title">0
+</string>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <imageView id="134">
+                    <rect key="frame" x="110" y="19" width="8" height="4"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="axesIndependently" image="redled" id="159"/>
+                </imageView>
+            </subviews>
+        </customView>
+    </objects>
+    <resources>
+        <image name="drive" width="237" height="68"/>
+        <image name="driveface" width="162" height="39"/>
+        <image name="greenled" width="8" height="4"/>
+        <image name="redled" width="8" height="4"/>
+    </resources>
+</document>

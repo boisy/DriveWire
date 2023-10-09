@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link media="all" rel="stylesheet" href="../sty/task_style.css">
+		<style type="text/css" media="screen"><!--
+#banner { background: #f2f2f2 no-repeat; float: left; padding: -2px 6px 0; border-bottom: 1px solid #bfbfbf; position: fixed; top: 0px; left: 0px; width: 100%; height: 14px; visibility: visible }
+#machelp { position: absolute; top: 2px; left: 10px; visibility: visible; display: block }
+--></style>
+		<title>Getting started</title>
+<meta name="generator" content="APD XSL 1.0e">
+<meta name="keywords" content="problem, cartridge, virtual disk, drive">
+<meta name="description" content="If you have a problem creating a cartridge, please take a look here. ">
+</head>
+<body>
+<div id="banner">
+<a name="dwgs"></a>
+<div id="machelp">
+				<a class="bread" href="help:anchor='access' bookID='DriveWire Help'">DriveWire Help</a></div>
+</div>
+		<div id="mainbox">
+<div id="caticon">
+<img width="32" height="32" alt="DriveWire Icon" src="../gfx/xicndw.gif"></div>
+<div id="pagetitle">
+<h1>Getting Started</h1>
+</div>
+			<p>There are three main steps involved in establishing communication between DriveWire and your CoCo. We'll go through each one and provide you with the details, and in no time your CoCo will be talking to your Macintosh!
+			<h2>Step 1: Make the Connections</h2>
+			<p>The first step is to make the physical connection necessary for communicatons. Since modern Macintosh computers do not come with built-in serial ports, you will need to obtain a USB to serial convertor. A recommended vendor for such an item is <a href="http://www.keyspan.com/">Keyspan</a>, though there are others.</p>
+			<p>Once you've obtained a USB to serial convertor that is supported by OS X, do the following:</p>
+			<div id="taskbox">
+				<ol>
+<li>Plug the USB to serial convertor in an unoccupied USB slot on your Macintosh. 				<li>Connect the other end of the USB to serial convertor to the 9 pin female connector found on one end of the DriveWire cable.
+
+					<li>Finally, connect the other end of the DriveWire cable to the 4 pin DIN jack on the back of the CoCo labeled <i>Serial I/O</i>.
+
+				</ol>
+				<p></p>
+			</div>
+		</div>
+		<p></p>
+		<h2>Step 2: Configure the Server</h2>
+		<p>With the physical connection complete, the next step is to configure DriveWire so that it knows what type of CoCo it's talking to, what channel of communication will be involved, and what cartridges will be used.</p>
+		<div id="mainbox">
+			<div id="taskbox">
+				<ol>
+					<li>Launch DriveWire on your Macintosh. A new document window will appear.
+					<li>Click on the virtual disk drive door to insert any cartridges that you would like your CoCo to have access to. Note that virtual drive 0 is considered the default drive, and should always contain a cartridge.					<li>Select the type of CoCo by clicking on the large image button. This button toggles between CoCo 1/CoCo 2 and CoCo 3 setups. Be sure your Color Computer appears on the button's image.
+					<li>Select the serial port that your CoCo is connected to using the pop-up button just above the CoCo image button.  Serial port names for USB to serial convertors tend to start with <i>usbserial</i>.					<li>You may selectively wish to view statistics or logging by clicking the checkboxes for each, respectively.
+				</ol>
+				<p></p>
+			</div>
+		</div>
+		<p></p>
+		<h2>Step 3: Configure the CoCo</h2>
+		<p>The third and final step is to prepare your CoCo to talk to DriveWire. Depending on how you plan on using your CoCo, you may wish to have DriveWire's DWDOS burnt into EPROM and installed either on your CoCo's motherboard or in a ROM Pak or disk controller. Another option is to configure HDB-DOS for DriveWire and use that as your primary means of communicating with DriveWire (see the DriveWire User Manual for more information on configuring HDB-DOS for DriveWire).</p>
+		<p>A more readily testable option is to load and execute the CoCo-specific binary that comes on the DriveWire distribution disk. It requires that a bootable cartridge (such as a NitrOS-9 system cartridge) be inserted in virtual disk drive 0:</p>
+		<div id="mainbox">
+			<div id="taskbox">
+				<ol>
+					<li>Insure that your Color Computer system is equipped with a floppy disk drive and controller.
+
+					<li>Insert the DriveWire Distribution Disk into one of the floppy disk drives.
+
+					<li>Power up the Color Computer, optional Multi-Pak, and the disk drive system.
+					<li>You should be in DISK EXTENDED COLOR BASIC at the OK prompt.  If you are using a Color Computer 1 or 2, type <b>LOADM&quot;DWDOSCC&quot;:EXEC</b>
+					<li>If you are using a Color Computer 3, type <b>LOADM&quot;DWDOSCC3&quot;:EXEC</b>
+				</ol>
+				<p></p>
+			</div>
+		</div>
+		<p>By executing the loader program, your CoCo will initiate a transaction to DriveWire. At a minimum, you should see some information in the statistics window and the log window.</p>
+	</body>
+</html>

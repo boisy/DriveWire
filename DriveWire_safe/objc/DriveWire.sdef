@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+<dictionary xmlns:xi="http://www.w3.org/2003/XInclude">
+    <xi:include href="file:///System/Library/ScriptingDefinitions/CocoaStandard.sdef" xpointer="xpointer(/dictionary/suite)"/>
+	<suite name="DriveWire Suite" code="DWr4" description="Classes just for the DriveWire application.">
+        <class name="application" code="capp" description="DriveWire application class." inherits="application">
+            <cocoa class="NSApplication"/>
+        </class>
+ 		<class name="document" code="docu" description="A DriveWire Document.">
+			<cocoa class="DriveWireDocument"/>
+			<property name="name" code="pnam" description="Its name." type="text" access="r">
+				<cocoa key="displayName"/>
+			</property>
+			<property name="modified" code="imod" description="Has it been modified since the last save?" type="boolean" access="r">
+				<cocoa key="isDocumentEdited"/>
+			</property>
+			<property name="file" code="file" description="Its location on disk, if it has one." type="file" access="r">
+				<cocoa key="fileURL"/>
+			</property>
+			<!-- This is just here for compatibility with old scripts. New scripts should use the more user-friendly file property. -->
+			<property hidden="yes" name="path" code="ppth" description="Its location on disk, if it has one, as a POSIX path string." type="text" access="r">
+				<cocoa key="fileName"/>
+			</property>
+            <property name="server" code="srvr" type="server" access="r" description="The DriveWire server for this document."/>
+		</class>
+        <class name="server" code="srvr" description="A DriveWire server object.">
+            <cocoa class="DriveWireServerModel"/>
+            <property name="baud" code="HWKn" type="integer" description="The baud rate." access="rw">
+                <cocoa key="baudRate"/>
+            </property>
+            <responds-to name="insert">
+                <cocoa method="handleInsertCommand:"/>
+            </responds-to>
+            <responds-to name="eject">
+                <cocoa method="handleEjectCommand:"/>
+            </responds-to>
+            <responds-to name="reload">
+                <cocoa method="handleReloadCommand:"/>
+            </responds-to>
+            <responds-to name="change to">
+                <cocoa method="handleChangePortCommand:"/>
+            </responds-to>
+        </class>
+        <command name="insert" code="DrvWStrt" description="Insert a disk image into a virtual drive.">
+            <direct-parameter type="server"/>
+            <parameter name="image" code="DImg" description="The disk image.">
+                <type type="file"/>
+                <cocoa key="fileURL"/>
+            </parameter>
+            <parameter name="into drive" code="InDr" description="The drive number.">
+                <type type="integer"/>
+                <cocoa key="drive"/>
+            </parameter>
+        </command>
+        <command name="eject" code="DrvWStop" description="Eject a disk image from a virtual drive.">
+            <direct-parameter type="server"/>
+            <parameter name="drive" code="DNum" description="The drive number.">
+                <type type="integer"/>
+                <cocoa key="drive"/>
+            </parameter>
+        </command>
+        <command name="reload" code="DrvWStop" description="Reload a disk image in virtual drive.">
+            <direct-parameter type="server"/>
+            <parameter name="drive" code="DNum" description="The drive number.">
+                <type type="integer"/>
+                <cocoa key="drive"/>
+            </parameter>
+        </command>
+        <command name="change to" code="DrvWChPr" description="Set the serial port.">
+            <direct-parameter type="server"/>
+            <parameter name="port" code="SPrt" description="The serial port name.">
+                <type type="text"/>
+                <cocoa key="port"/>
+            </parameter>
+        </command>
+	</suite>
+</dictionary>

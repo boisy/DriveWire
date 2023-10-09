@@ -1,0 +1,19 @@
+//
+// Prefix header for all source files of the 'DriveWire' target in the 'DriveWire' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+    #import "BGPLog.h"
+#endif
+
+#define EnforceDelay(waitTime)  { \
+NSDate *future = [NSDate dateWithTimeIntervalSinceNow:waitTime]; \
+NSTimeInterval left; \
+do \
+{ \
+[[NSRunLoop currentRunLoop] runUntilDate:future]; \
+left = [future timeIntervalSinceNow]; \
+} while (left > 0); \
+}
+

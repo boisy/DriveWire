@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>DriveWire</title>
+        <item>
+            <title>1.2.1</title>
+            <pubDate>Sat, 13 Feb 2021 21:09:53 -0600</pubDate>
+            <sparkle:minimumSystemVersion>10.9</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/boisy/drivewire-mac/releases/latest/DriveWire.zip" sparkle:version="101" sparkle:shortVersionString="1.2.1" length="4729165" type="application/octet-stream" sparkle:edSignature="ytqeOBzhYWUOsommBHca8YR9DywHn4L5Jl/9T016iw/B8s2ptE6yk/MM/B6EMxMrnsMN9N27XEnZzae/YRK0CA=="/>
+        </item>
+    </channel>
+</rss>
