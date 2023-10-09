@@ -29,7 +29,7 @@ There are other repositories that host DriveWire implementations:
 
 ## History
 
-DriveWire began life in 2003 as a solution for the Tandy Color Computer. Floppy drives were starting to wane and modern storage options for older computer systems were still years from being developed. At Tandy Assembly in 2023, [Boisy Pitre](http://www.pitre.org/) gave [this talk](https://www.youtube.com/watch?v=-w7X0CfqFbc&t=462s) on DriveWire's history and development.
+DriveWire began life in 2003 as a solution for the Tandy Color Computer. Floppy drives were starting to wane and modern storage options for older computer systems were still years from being developed. [Boisy Pitre](http://www.pitre.org/) gave [this talk](https://www.youtube.com/watch?v=-w7X0CfqFbc&t=462s) on DriveWire's history and development at Tandy Assembly on October 2, 2021.
 
 In 2012, Aaron Wolfe and Boisy Pitre expanded the protocol to include networking services. Aaron went on to create DriveWire 4, a Java-based host.
 
