@@ -1,8 +1,0 @@
-DRIVE		RCDATA "drive.jpg"
-DRIVEFACE	RCDATA "driveface.jpg"
-REDLED		RCDATA "redled.jpg"
-GREENLED	RCDATA "greenled.jpg"
-INSERT 		WAVE "insert.wav"
-EJECT  		WAVE "eject.wav"
-
-
