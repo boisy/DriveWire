@@ -37,25 +37,25 @@ public struct DriveWireStatistics {
 
 /// Errors that the DriveWire host throws.
 public enum DriveWireError : Error {
-    /// There is already a virtual drive.
+    /// There's a virtual drive currently mounted in this slot.
     case driveAlreadyExists
 }
 
 /// Manages communication with a DriveWire guest.
 ///
-/// DriveWire defines a standard that provides device services to a *guest* that are located on a *host*. Connectivity occurs over a physical connection such as a serial cable. This gives the guest the appearance that these devices are local, when they are actually virtual. The DriveWire host provides virtual disk drive, virtual printer, and virtual serial port services.
+/// DriveWire is a connectivity standard that defines virtual disk drive, virtual printer, and virtual serial port services. A DriveWire *host* provides these services to a *guest*. Connectivity between the host and guest occurs over a physical connection, such as a serial cable. To the guest, it appears that the host's devices are local, when they are actually virtual.
 ///
-/// The essence of communication between the guest and host is a documented set of uni- and bi-directional messages called transactions. Each transaction is composed of one or more packets, which are passed between the guest and host through a serial line connection.
+/// The basis of communication between the guest and host is a documented set of uni- and bi-directional messages called *transactions*. A transaction is a series of one or more packets that the guest and host pass to each other.
 ///
 public class DriveWireHost {
     /// Statistical information about the host.
     public var statistics = DriveWireStatistics()
     private var serialBuffer = Data()
     private var delegate : DriveWireDelegate?
-    /// The DriveWire operation code of the operation that the host is currently executing.
+    /// The DriveWire transaction code of the transaction that the host is currently executing.
     ///
-    /// Inspect this property to determine what the operation the host is currently executing.
-    public var currentOperation : UInt8 = 0
+    /// Inspect this property to determine which transaction the host is currently executing.
+    public var currentTransaction : UInt8 = 0
     /// An array of virtual drive tuples.
     ///
     /// The tuple holds the virtual drive number and the file path to each virtual disk that the host accesses.
@@ -69,16 +69,16 @@ public class DriveWireHost {
         var processor : ((Data) -> Int)
     }
     
-    private var dwOperation : Array<DWOp> = []
+    private var dwTransaction : Array<DWOp> = []
     private var validateWithCRC = false
     private var fastwriteChannel : UInt8 = 0
     private var processor : ((Data) -> Int)?
     
-    /// The no-operation operation code.
+    /// The no-operation transaction code.
     ///
-    /// This operation does nothing.
+    /// This transaction does nothing.
     public let OPNOP : UInt8 = 0x00
-    /// The time operation code.
+    /// The time transaction code.
     ///
     /// This is a bi-directional transaction that requests the date and time from the host. The format of the response is a 6-byte packet.
     ///
@@ -91,21 +91,21 @@ public class DriveWireHost {
     /// | 4 | Minute | 0-59 | Represents the minute. |
     /// | 5 | Second | 0-59 | Represents the second. |
     public let OPTIME : UInt8 = 0x23
-    /// The named object mount operation code.
+    /// The named object mount transaction code.
     public let OPNAMEOBJMOUNT : UInt8 = 0x01
-    /// The named object mount operation code.
+    /// The named object create transaction code.
     public let OPNAMEOBJCREATE : UInt8 = 0x02
-    /// The initialization operation code.
+    /// The initialization transaction code.
     ///
-    /// This is a bi-directional transaction that informs the host of its driver version or capabilities. The host responds with it's own version and capabilities.
-    /// The exact meanings of the version byte are not yet defined. The OS-9 driver currently uses this operation to determine whether it should load DriveWire 4-specific extensions
+    /// This is a bi-directional transaction that informs the guest and host of each other's version and capabilities.
+    /// The exact meaning of the version byte isn't defined. The OS-9 driver currently uses this transaction to determine whether it should load DriveWire 4-specific extensions
     /// such as the virtual channel polling routine.
     ///
     /// The guest initiates the transaction with this 2-byte packet.
     ///
     /// | Offset | Value |
     /// | ------- | ------- |
-    /// | 0 | The operation code ($5A). |
+    /// | 0 | The transaction code ($5A). |
     /// | 1 | The guest's version/capabilities byte. |
     ///
     /// The host responds with its own version/capabilities byte.
@@ -114,21 +114,21 @@ public class DriveWireHost {
     /// | ------- | ------- |
     /// | 0 | The host version/capabilities byte. |
     public let OPDWINIT : UInt8 = 0x5A
-    /// The read operation code.
+    /// The read transaction code.
     ///
-    /// This operation provides 256-byte sectors of binary data to the guest from a virtual disk. The guest provides a virtual drive number from 0 - 255 and a 24-bit logical sector number (LSN) that represents the offset from the beginning of the virtual disk to the desired sector.
+    /// This transaction provides 256-byte sectors of binary data to the guest from a virtual disk. The guest provides a virtual drive number from 0 - 255 and a 24-bit logical sector number (LSN) that represents the offset from the beginning of the virtual disk to the desired sector.
     ///
     /// The guest initiates the transaction with this 5-byte packet.
     ///
     /// | Offset | Value |
     /// | ------- | ------- |
-    /// | 0 | The operation code ($52). |
+    /// | 0 | The trransaction code ($52). |
     /// | 1 | The virtual drive number from 0 - 255. |
     /// | 2 | Bits 23-16 of the 24 bit logical sector number |
     /// | 3 | Bits 15-8 of the 24 bit logical sector number |
     /// | 4 | Bits 7-0 of the 24 bit logical sector number |
     ///
-    /// If the operation is successful, the host responds with the following packet,
+    /// If the transaction is successful, the host responds with the following packet,
     ///
     /// | Offset | Value |
     /// | ------- | ------- |
@@ -137,64 +137,64 @@ public class DriveWireHost {
     /// | 2 | Bits 7-0 of the checksum of the 256-byte sector. |
     /// | 3 - 258 | The 256-byte sector data. |
     ///
-    /// If the operation is not successful, the host responds with the following packet.
+    /// If the transaction is not successful, the host responds with the following packet.
     ///
     /// | Offset | Value |
     /// | ------- | ------- |
     /// | 0 | The error code greater than zero indicating the transaction failed. |
     ///
-    /// If the guest receives an error code that isn't zero, it may choose to retry the operation using ``OPREREAD``.
+    /// If the guest receives an error code that isn't zero, it may choose to retry the transaction using ``OPREREAD``.
     public let OPREAD : UInt8 = 0x52
-    /// The read extended operation code.
+    /// The read extended transaction code.
     ///
     /// This is an extended version of the ``OPREAD``.
     public let OPREADEX : UInt8 = 0xD2
-    /// The initialization operation code.
+    /// The initialization transaction code.
     ///
     /// This is a uni-directional transaction that indicates the guest is ready to use DriveWire. It doesn't cause any action on the host.
     /// Use ``OPDWINIT`` instead.
-    @available(*, deprecated, message: "This is a historical operation code that you should no longer use.")
+    @available(*, deprecated, message: "This is a historical transaction code that you should no longer use.")
     public let OPINIT : UInt8 = 0x49
-    /// The termination operation code.
+    /// The termination transaction code.
     ///
     /// This is a uni-directional transaction that the guest can initiate to indicate it's ready to stop using DriveWire. It doesn't cause any action on the host.
-    @available(*, deprecated, message: "This is a historical operation code that you should no longer use.")
+    @available(*, deprecated, message: "This is a historical transaction code that you should no longer use.")
     public let OPTERM : UInt8 = 0x54
-    /// The re-read operation code.
+    /// The re-read transaction code.
     public let OPREREAD : UInt8 = 0x72
-    /// The extended re-read operation code.
+    /// The extended re-read transaction code.
     public let OPREREADEX : UInt8 = 0xF2
-    /// The write operation code.
+    /// The write transaction code.
     public let OPWRITE : UInt8 = 0x57
-    /// The re-write operation code.
+    /// The re-write transaction code.
     public let OPREWRITE : UInt8 = 0x77
-    /// The virtual drive  get status operation code.
+    /// The virtual drive  get status transaction code.
     public let OPGETSTAT : UInt8 = 0x47
-    /// The virtual drive set status operation code.
+    /// The virtual drive set status transaction code.
     public let OPSETSTAT : UInt8 = 0x53
-    /// The reset operation code.
+    /// The reset transaction code.
     ///
     /// This is a uni-directional transaction that the guest sends to the host to indicate that it completed a reset condition.
-    @available(*, deprecated, message: "This is a historical operation code that you should no longer use.")
+    @available(*, deprecated, message: "This is a historical transaction code that you should no longer use.")
     public let OPRESET3 : UInt8 = 0xF8
-    /// The reset operation code.
+    /// The reset transaction code.
     ///
     /// This is a uni-directional transaction that the guest sends to the host to indicate that it completed a reset condition.
-    @available(*, deprecated, message: "This is a historical operation code that you should no longer use.")
+    @available(*, deprecated, message: "This is a historical transaction code that you should no longer use.")
     public let OPRESET2 : UInt8 = 0xFE
-    /// The reset operation code.
+    /// The reset transaction code.
     ///
     /// This is a uni-directional transaction that the guest sends to the host to indicate that it completed a reset condition.
     public let OPRESET : UInt8 = 0xFE
-    /// The WireBug operation code.
+    /// The WireBug transaction code.
     public let OPWIREBUG : UInt8 = 0x42
-    /// The print flush operation code.
+    /// The print flush transaction code.
     ///
     /// This is a uni-directional transaction that the guest sends to the host to indicate that the print buffer is ready for printing.
     ///
     /// Upon receipt, the host sends the contents of the print buffer to the configured printer, then it clears the print buffer.
     public let OPPRINTFLUSH : UInt8 = 0x46
-    /// The print operation code.
+    /// The print transaction code.
     ///
     /// This is a uni-directional transaction that the guest sends to the host to add a byte of data to the print queue.
     ///
@@ -202,26 +202,26 @@ public class DriveWireHost {
     ///
     /// | Offset | Value |
     /// | ------- | ------- |
-    /// | 0 | The operation code ($5A). |
+    /// | 0 | The transaction code ($5A). |
     /// | 1 | The byte of data to add to the queue. |
     ///
-    /// Upon receiving this packet, the host adds the passed byte to its internal print buffer. To start the print operation, see ``OPPRINTFLUSH``.
+    /// Upon receiving this packet, the host adds the passed byte to its internal print buffer. To start the print transaction, see ``OPPRINTFLUSH``.
     public let OPPRINT : UInt8 = 0x50
-    /// The serial initialization operation code.
+    /// The serial initialization transaction code.
     public let OPSERINIT : UInt8 = 0x45
-    /// The serial termination operation code.
+    /// The serial termination transaction code.
     public let OPSERTERM : UInt8 = 0xC5
-    /// The serial get status operation code.
+    /// The serial get status transaction code.
     public let OPSERGETSTAT : UInt8 = 0x44
-    /// The serial set status operation code.
+    /// The serial set status transaction code.
     public let OPSERSETSTAT : UInt8 = 0xC4
-    /// The serial read operation code.
+    /// The serial read transaction code.
     public let OPSERREAD : UInt8 = 0x43
-    /// The serial read multiple operation code.
+    /// The serial read multiple transaction code.
     public let OPSERREADM : UInt8 = 0x63
-    /// The serial write operation code.
+    /// The serial write transaction code.
     public let OPSERWRITE : UInt8 = 0xC3
-    /// The serial write multiple operation code.
+    /// The serial write multiple transaction code.
     public let OPSERWRITEM : UInt8 = 0x64
     
     enum DWWirebugOpCode : UInt8 {
@@ -240,35 +240,35 @@ public class DriveWireHost {
     init(delegate : DriveWireDelegate) {
         self.delegate = delegate
         
-        dwOperation.append(DWOp(opcode:OPDWINIT, processor: self.OP_DWINIT))
-        dwOperation.append(DWOp(opcode:OPNAMEOBJMOUNT, processor: self.OP_NAMEOBJ_MOUNT))
-        dwOperation.append(DWOp(opcode:OPNAMEOBJCREATE, processor: self.OP_NAMEOBJ_CREATE))
-        dwOperation.append(DWOp(opcode:OPNOP, processor: self.OP_NOP))
-        dwOperation.append(DWOp(opcode:OPTIME, processor: self.OP_TIME))
-        dwOperation.append(DWOp(opcode:OPINIT, processor: self.OP_INIT))
-        dwOperation.append(DWOp(opcode:OPTERM, processor: self.OP_TERM))
-        dwOperation.append(DWOp(opcode:OPREAD, processor: self.OP_READ))
-        dwOperation.append(DWOp(opcode:OPREADEX, processor: self.OP_READEX))
-        dwOperation.append(DWOp(opcode:OPREREAD, processor: self.OP_REREAD))
-        dwOperation.append(DWOp(opcode:OPREREADEX, processor: self.OP_REREADEX))
-        dwOperation.append(DWOp(opcode:OPWRITE, processor: self.OP_WRITE))
-        dwOperation.append(DWOp(opcode:OPREWRITE, processor: self.OP_REWRITE))
-        dwOperation.append(DWOp(opcode:OPGETSTAT, processor: self.OP_GETSTAT))
-        dwOperation.append(DWOp(opcode:OPSETSTAT, processor: self.OP_SETSTAT))
-        dwOperation.append(DWOp(opcode:OPRESET3, processor: self.OP_RESET))
-        dwOperation.append(DWOp(opcode:OPRESET2, processor: self.OP_RESET))
-        dwOperation.append(DWOp(opcode:OPRESET, processor: self.OP_RESET))
-        dwOperation.append(DWOp(opcode:OPWIREBUG, processor: self.OP_WIREBUG))
-        dwOperation.append(DWOp(opcode:OPPRINTFLUSH, processor: self.OP_PRINTFLUSH))
-        dwOperation.append(DWOp(opcode:OPPRINT, processor: self.OP_PRINT))
-        dwOperation.append(DWOp(opcode:OPSERINIT, processor: self.OP_SERINIT))
-        dwOperation.append(DWOp(opcode:OPSERTERM, processor: self.OP_SERTERM))
-        dwOperation.append(DWOp(opcode:OPSERGETSTAT, processor: self.OP_SERGETSTAT))
-        dwOperation.append(DWOp(opcode:OPSERSETSTAT, processor: self.OP_SERSETSTAT))
-        dwOperation.append(DWOp(opcode:OPSERREAD, processor: self.OP_SERREAD))
-        dwOperation.append(DWOp(opcode:OPSERREADM, processor: self.OP_SERREADM))
-        dwOperation.append(DWOp(opcode:OPSERWRITE, processor: self.OP_SERWRITE))
-        dwOperation.append(DWOp(opcode:OPSERWRITEM, processor: self.OP_SERWRITEM))
+        dwTransaction.append(DWOp(opcode:OPDWINIT, processor: self.OP_DWINIT))
+        dwTransaction.append(DWOp(opcode:OPNAMEOBJMOUNT, processor: self.OP_NAMEOBJ_MOUNT))
+        dwTransaction.append(DWOp(opcode:OPNAMEOBJCREATE, processor: self.OP_NAMEOBJ_CREATE))
+        dwTransaction.append(DWOp(opcode:OPNOP, processor: self.OP_NOP))
+        dwTransaction.append(DWOp(opcode:OPTIME, processor: self.OP_TIME))
+        dwTransaction.append(DWOp(opcode:OPINIT, processor: self.OP_INIT))
+        dwTransaction.append(DWOp(opcode:OPTERM, processor: self.OP_TERM))
+        dwTransaction.append(DWOp(opcode:OPREAD, processor: self.OP_READ))
+        dwTransaction.append(DWOp(opcode:OPREADEX, processor: self.OP_READEX))
+        dwTransaction.append(DWOp(opcode:OPREREAD, processor: self.OP_REREAD))
+        dwTransaction.append(DWOp(opcode:OPREREADEX, processor: self.OP_REREADEX))
+        dwTransaction.append(DWOp(opcode:OPWRITE, processor: self.OP_WRITE))
+        dwTransaction.append(DWOp(opcode:OPREWRITE, processor: self.OP_REWRITE))
+        dwTransaction.append(DWOp(opcode:OPGETSTAT, processor: self.OP_GETSTAT))
+        dwTransaction.append(DWOp(opcode:OPSETSTAT, processor: self.OP_SETSTAT))
+        dwTransaction.append(DWOp(opcode:OPRESET3, processor: self.OP_RESET))
+        dwTransaction.append(DWOp(opcode:OPRESET2, processor: self.OP_RESET))
+        dwTransaction.append(DWOp(opcode:OPRESET, processor: self.OP_RESET))
+        dwTransaction.append(DWOp(opcode:OPWIREBUG, processor: self.OP_WIREBUG))
+        dwTransaction.append(DWOp(opcode:OPPRINTFLUSH, processor: self.OP_PRINTFLUSH))
+        dwTransaction.append(DWOp(opcode:OPPRINT, processor: self.OP_PRINT))
+        dwTransaction.append(DWOp(opcode:OPSERINIT, processor: self.OP_SERINIT))
+        dwTransaction.append(DWOp(opcode:OPSERTERM, processor: self.OP_SERTERM))
+        dwTransaction.append(DWOp(opcode:OPSERGETSTAT, processor: self.OP_SERGETSTAT))
+        dwTransaction.append(DWOp(opcode:OPSERSETSTAT, processor: self.OP_SERSETSTAT))
+        dwTransaction.append(DWOp(opcode:OPSERREAD, processor: self.OP_SERREAD))
+        dwTransaction.append(DWOp(opcode:OPSERREADM, processor: self.OP_SERREADM))
+        dwTransaction.append(DWOp(opcode:OPSERWRITE, processor: self.OP_SERWRITE))
+        dwTransaction.append(DWOp(opcode:OPSERWRITEM, processor: self.OP_SERWRITEM))
         processor = OP_OPCODE
     }
     
@@ -351,7 +351,7 @@ public class DriveWireHost {
     private func OP_DWINIT(data : Data) -> Int {
         var result = 0
         let expectedCount = 2
-        currentOperation = OPDWINIT
+        currentTransaction = OPDWINIT
         
         if data.count >= expectedCount {
             // Save capabilities byte.
@@ -371,13 +371,13 @@ public class DriveWireHost {
     private func OP_NAMEOBJ_MOUNT(data : Data) -> Int {
         var result = 0
         let expectedCount = 259
-        currentOperation = OPNAMEOBJMOUNT
+        currentTransaction = OPNAMEOBJMOUNT
         if data.count >= expectedCount {
             resetState()
             result = expectedCount;
             
             statistics.lastDriveNumber = data[1]
-            delegate?.transactionCompleted(opCode: currentOperation)
+            delegate?.transactionCompleted(opCode: currentTransaction)
         }
         
         return result
@@ -386,27 +386,27 @@ public class DriveWireHost {
     private func OP_NAMEOBJ_CREATE(data : Data) -> Int {
         var result = 0
         let expectedCount = 259
-        currentOperation = OPNAMEOBJCREATE
+        currentTransaction = OPNAMEOBJCREATE
         if data.count >= expectedCount {
             resetState()
             result = expectedCount;
             
             statistics.lastDriveNumber = data[1]
-            delegate?.transactionCompleted(opCode: currentOperation)
+            delegate?.transactionCompleted(opCode: currentTransaction)
         }
         
         return result
     }
     
     private func OP_NOP(data : Data) -> Int {
-        currentOperation = OPNOP
+        currentTransaction = OPNOP
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_TIME(data : Data) -> Int {
-        currentOperation = OPTIME
+        currentTransaction = OPTIME
         let currentDate = Date()
         let calendar = Calendar.current
         let year = UInt8(calendar.component(.year, from: currentDate) - 1900)
@@ -417,22 +417,22 @@ public class DriveWireHost {
         let second = UInt8(calendar.component(.second, from: currentDate))
         resetState()
         delegate?.dataAvailable(host: self, data: Data([year, month, day, hour, minute, second]))
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_INIT(data : Data) -> Int {
-        currentOperation = OPINIT
+        currentTransaction = OPINIT
         resetState()
         statistics = DriveWireStatistics()  // reset statistics
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_TERM(data : Data) -> Int {
-        currentOperation = OPTERM
+        currentTransaction = OPTERM
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
@@ -441,7 +441,7 @@ public class DriveWireHost {
         var result = 0
         var error = 0
         let expectedCount = 263
-        currentOperation = OPWRITE
+        currentTransaction = OPWRITE
         
         if data.count >= expectedCount {
             resetState()
@@ -467,7 +467,7 @@ public class DriveWireHost {
             
             statistics.lastDriveNumber = driveNumber
             delegate?.dataAvailable(host: self, data: Data([UInt8(error)]))
-            delegate?.transactionCompleted(opCode: currentOperation)
+            delegate?.transactionCompleted(opCode: currentTransaction)
         }
         
         return result
@@ -484,7 +484,7 @@ public class DriveWireHost {
     private func OP_GETSTAT(data : Data) -> Int {
         var result = 0
         let expectedCount = 3
-        currentOperation = OPGETSTAT
+        currentTransaction = OPGETSTAT
         
         if data.count >= expectedCount {
             resetState()
@@ -492,7 +492,7 @@ public class DriveWireHost {
             
             statistics.lastDriveNumber = data[1]
             statistics.lastGetStat = data[2]
-            delegate?.transactionCompleted(opCode: currentOperation)
+            delegate?.transactionCompleted(opCode: currentTransaction)
         }
         
         return result
@@ -501,7 +501,7 @@ public class DriveWireHost {
     private func OP_SETSTAT(data : Data) -> Int {
         var result = 0
         let expectedCount = 3
-        currentOperation = OPSETSTAT
+        currentTransaction = OPSETSTAT
         
         if data.count >= expectedCount {
             resetState()
@@ -509,28 +509,28 @@ public class DriveWireHost {
             
             statistics.lastDriveNumber = data[1]
             statistics.lastSetStat = data[2]
-            delegate?.transactionCompleted(opCode: currentOperation)
+            delegate?.transactionCompleted(opCode: currentTransaction)
         }
         
         return result
     }
     
     private func OP_RESET(data : Data) -> Int {
-        currentOperation = OPRESET
+        currentTransaction = OPRESET
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_WIREBUG(data : Data) -> Int {
         var result = 0
         let expectedCount = 24
-        currentOperation = OPWIREBUG
+        currentTransaction = OPWIREBUG
         
         if data.count >= expectedCount {
             resetState()
             result = expectedCount;
-            delegate?.transactionCompleted(opCode: currentOperation)
+            delegate?.transactionCompleted(opCode: currentTransaction)
         }
         
         return result
@@ -542,95 +542,95 @@ public class DriveWireHost {
     private func OP_PRINT(data : Data) -> Int {
         var result = 0
         let expectedCount = 2
-        currentOperation = OPPRINT
+        currentTransaction = OPPRINT
         
         if data.count >= expectedCount {
             resetState()
             result = expectedCount
             let printerByte = data[1]
             printBuffer.append(printerByte)
-            delegate?.transactionCompleted(opCode: currentOperation)
+            delegate?.transactionCompleted(opCode: currentTransaction)
         }
         
         return result
     }
     
     private func OP_PRINTFLUSH(data : Data) -> Int {
-        currentOperation = OPPRINTFLUSH
+        currentTransaction = OPPRINTFLUSH
         resetState()
         
         // For now, just clear the print buffer
         printBuffer.removeAll()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         
         return 1
     }
     
     private func OP_SERINIT(data : Data) -> Int {
-        currentOperation = OPSERINIT
+        currentTransaction = OPSERINIT
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_SERTERM(data : Data) -> Int {
-        currentOperation = OPSERTERM
+        currentTransaction = OPSERTERM
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_SERREAD(data : Data) -> Int {
-        currentOperation = OPSERREAD
+        currentTransaction = OPSERREAD
         resetState()
         delegate?.dataAvailable(host: self, data: Data([0x00, 0x00]))
         return 1
     }
     
     private func OP_SERREADM(data : Data) -> Int {
-        currentOperation = OPSERREADM
+        currentTransaction = OPSERREADM
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_SERWRITE(data : Data) -> Int {
-        currentOperation = OPSERWRITE
+        currentTransaction = OPSERWRITE
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_SERWRITEM(data : Data) -> Int {
-        currentOperation = OPSERWRITEM
+        currentTransaction = OPSERWRITEM
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_SERGETSTAT(data : Data) -> Int {
-        currentOperation = OPSERGETSTAT
+        currentTransaction = OPSERGETSTAT
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_SERSETSTAT(data : Data) -> Int {
-        currentOperation = OPSERSETSTAT
+        currentTransaction = OPSERSETSTAT
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_FASTWRITE_Serial(data : Data) -> Int {
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
     private func OP_FASTWRITE_Screen(data : Data) -> Int {
         resetState()
-        delegate?.transactionCompleted(opCode: currentOperation)
+        delegate?.transactionCompleted(opCode: currentTransaction)
         return 1
     }
     
@@ -651,7 +651,7 @@ public class DriveWireHost {
             self.fastwriteChannel = (byte & 0x0F) - 1;
             result = OP_FASTWRITE_Screen(data: data)
         } else {
-            for e in dwOperation {
+            for e in dwTransaction {
                 if e.opcode == byte {
                     processor = e.processor
                     result = processor!(data)
@@ -670,7 +670,7 @@ extension DriveWireHost {
     }
     
     private func OP_READEX(data : Data) -> Int {
-        currentOperation = OPREADEX
+        currentTransaction = OPREADEX
         var result = 0
         var error = 0
         var sectorBuffer = Data(repeating: 0, count: 256)
@@ -734,7 +734,7 @@ extension DriveWireHost {
     }
     
     private func OP_READ(data : Data) -> Int {
-        currentOperation = OPREADEX
+        currentTransaction = OPREADEX
         var result = 0
         var error = 0
         var sectorBuffer = Data(repeating: 0, count: 256)
