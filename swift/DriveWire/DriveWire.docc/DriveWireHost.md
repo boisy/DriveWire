@@ -10,18 +10,13 @@
 
 - ``compute16BitChecksum(data:)``
 
-### Inserting and ejecting virtual disks
-
-- ``insertVirtualDisk(driveNumber:imagePath:)``
-- ``ejectVirtualDisk(driveNumber:)``
-
 ### Sending information to the host
 
 - ``send(data:)``
 
 ### Getting operational information
 
-- ``currentOperation``
+- ``currentTransaction``
 - ``statistics``
 
 ### Getting and setting status
@@ -51,6 +46,14 @@
 - ``OPWRITEX``
 - ``OPREWRITEX``
 
+### Managing virtual drives
+
+- ``VirtualDrive``
+- ``virtualDrives``
+- ``insertVirtualDisk(driveNumber:imagePath:)``
+- ``ejectVirtualDisk(driveNumber:)``
+
+
 ### Printing to virtual printers
 
 - ``OPPRINT``
@@ -58,7 +61,6 @@
 
 ### Reading and writing virtual serial ports
 
-- ``virtualDrives``
 - ``OPSERREAD``
 - ``OPSERREADM``
 - ``OPSERWRITE``
@@ -69,7 +71,7 @@
 - ``OPNAMEOBJMOUNT``
 - ``OPNAMEOBJCREATE``
 
-### Handling resets
+### Detecting reset
 
 - ``OPRESET``
 - ``OPRESET2``
@@ -83,3 +85,4 @@
 
 - ``OPWIREBUG``
 - ``OPNOP``
+- ``DWWirebugOpCode``

@@ -7,20 +7,36 @@
 
 import ORSSerial
 
+/// Provides a serial interface to a DriveWire host.
+///
+/// This class provides the ability to connect to a guest on a serial port. Provide the
+/// device name of the serial port in ``init(serialPort:)``, then start the
+/// driver by calling ``run()``. When you're ready for the driver to stop, set ``quit`` to `true`.
 class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate {
-    var performDump = false
+    /// A flag that when set to `true`,  causes the driver to stop running.
+    public var quit = false
     
-    func serialPortWasRemovedFromSystem(_ serialPort: ORSSerialPort) {
+    private var performDump = false
+    private var port : ORSSerialPort?
     
+    /// The host object.
+    internal var host : DriveWireHost?
+
+    @_documentation(visibility: private)
+    internal func serialPortWasRemovedFromSystem(_ serialPort: ORSSerialPort) {
     }
     
-    func serialPortWasOpened(_ serialPort: ORSSerialPort) {
+    @_documentation(visibility: private)
+    internal func serialPortWasOpened(_ serialPort: ORSSerialPort) {
     }
     
-    func serialPort(_ serialPort: ORSSerialPort, didEncounterError error: Error) {
+    @_documentation(visibility: private)
+    internal func serialPort(_ serialPort: ORSSerialPort, didEncounterError error: Error) {
         print(error)
     }
-    func serialPort(_ serialPort: ORSSerialPort, didReceive data: Data) {
+    
+    @_documentation(visibility: private)
+    internal func serialPort(_ serialPort: ORSSerialPort, didReceive data: Data) {
         var d = data
         if performDump == true {
             data.dump(prefix: "->")
@@ -28,22 +44,22 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
         host?.send(data: &d)
     }
     
-    var quit = false
-    var port : ORSSerialPort?
-    
-    func transactionCompleted(opCode: UInt8) {
+    @_documentation(visibility: private)
+    internal func transactionCompleted(opCode: UInt8) {
     }
     
-    func dataAvailable(host: DriveWireHost, data: Data) {
+    @_documentation(visibility: private)
+    internal func dataAvailable(host: DriveWireHost, data: Data) {
         if performDump == true {
             data.dump(prefix: "<-")
         }
         port?.send(data)
     }
     
-    // The DriveWire model.
-    var host : DriveWireHost?
-    
+    /// Create a driver that connects to a serial port.
+    ///
+    /// - Parameters:
+    ///     - serialPort: The name of the serial port device to connect to.
     init(serialPort: String) {
         super.init()
         host = DriveWireHost(delegate: self)
@@ -55,7 +71,10 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
         }
     }
     
-    func run() {
+    /// Start the driver.
+    ///
+    /// This method returns when ``quit`` is `true`.
+    public func run() {
         while self.quit == false {
             RunLoop.current.run(until: Date(timeIntervalSinceNow: 10.0))
         }

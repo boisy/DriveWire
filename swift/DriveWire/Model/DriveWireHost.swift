@@ -224,13 +224,18 @@ public class DriveWireHost {
     /// The serial write multiple transaction code.
     public let OPSERWRITEM : UInt8 = 0x64
     
+    /// A set of operations that control debugging on the guest.
     enum DWWirebugOpCode : UInt8 {
+        /// The code for reading a guest's CPU registers.
         case OP_WIREBUG_READREGS = 82
+        /// The code for writing a guest's CPU registers.
         case OP_WIREBUG_WRITEREGS = 114
+        /// The code for reading a guest's memory.
         case OP_WIREBUG_READMEM = 77
+        /// The code for writing a guest's memory.
         case OP_WIREBUG_WRITEMEM = 109
+        /// The code for enforcing a guest's execution path.
         case OP_WIREBUG_GO = 71
-        
     }
     
     /// Creates a DriveWire host.
