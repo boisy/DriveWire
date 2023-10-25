@@ -76,9 +76,7 @@ public class DriveWireHost : Codable {
     ///
     /// Inspect this property to determine which transaction the host is currently executing.
     public var currentTransaction : UInt8 = 0
-    /// An array of virtual drive tuples.
-    ///
-    /// The tuple holds the virtual drive number and the file path to each virtual disk that the host accesses.
+    /// An array of virtual drives.
     public var virtualDrives : [VirtualDrive] = []
     
     /// The guest's capability byte sent from ``OPDWINIT``.
