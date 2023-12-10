@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6809D2E02B25410F0092A869 /* DriveWire.docc in Sources */ = {isa = PBXBuildFile; fileRef = 686E2FC42AC8A5B200F94CFD /* DriveWire.docc */; };
 		6818E5A12AC9D5E200A6C300 /* DriveWireHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6818E5A02AC9D5E200A6C300 /* DriveWireHost.swift */; };
 		6818E5A22AC9D6A200A6C300 /* DriveWireHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6818E5A02AC9D5E200A6C300 /* DriveWireHost.swift */; };
 		6818E8112AC7786C00CD3A16 /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 6818E8102AC7786C00CD3A16 /* CocoaLumberjack */; };
@@ -345,6 +346,7 @@
 			files = (
 				68A842102AD329B6009BE6D3 /* main.swift in Sources */,
 				68A842142AD3329A009BE6D3 /* DriveWireHost.swift in Sources */,
+				6809D2E02B25410F0092A869 /* DriveWire.docc in Sources */,
 				68A842152AD3329D009BE6D3 /* DriveWireSerialDriver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

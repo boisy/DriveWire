@@ -16,7 +16,7 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     /// A flag that when set to `true`,  causes the driver to stop running.
     public var quit = false
     
-    private var performDump = false
+    private var performDump = true
     private var port : ORSSerialPort?
     
     /// The host object.
@@ -60,13 +60,22 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     ///
     /// - Parameters:
     ///     - serialPort: The name of the serial port device to connect to.
-    init(serialPort: String) {
+    convenience init(serialPort: String) {
+        self.init(serialPort: serialPort, baudRate: 230400)
+    }
+    
+    /// Create a driver that connects to a serial port with a specific baud rate.
+    ///
+    /// - Parameters:
+    ///     - serialPort: The name of the serial port device to connect to.
+    ///     - baudRate: The number of bits per second of the device.
+    init(serialPort: String, baudRate: NSNumber) {
         super.init()
         host = DriveWireHost(delegate: self)
         port = ORSSerialPort(path: serialPort)
         if let port = port {
             port.delegate = self
-            port.baudRate = 230400
+            port.baudRate = baudRate
             port.open()
         }
     }

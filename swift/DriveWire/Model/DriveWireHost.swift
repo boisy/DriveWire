@@ -39,6 +39,8 @@ public struct DriveWireStatistics {
 public enum DriveWireError : Error {
     /// There's a virtual drive currently mounted in this slot.
     case driveAlreadyExists
+    /// A virtual disk with that name doesn't exist.
+    case nameNotFound
 }
 
 /// Manages communication with a DriveWire guest.
@@ -185,7 +187,7 @@ public class DriveWireHost {
     /// The reset transaction code.
     ///
     /// This is a uni-directional transaction that the guest sends to the host to indicate that it completed a reset condition.
-    public let OPRESET : UInt8 = 0xFE
+    public let OPRESET : UInt8 = 0xFF
     /// The WireBug transaction code.
     public let OPWIREBUG : UInt8 = 0x42
     /// The print flush transaction code.
@@ -298,6 +300,37 @@ public class DriveWireHost {
         virtualDrives.removeAll { $0.driveNumber == driveNumber }
     }
     
+    /// Find a virtual disk with a specific name.
+    /// - Parameters:
+    ///     - name: The name of the virtual disk. This is the last component of a pathlsit.
+    /// - Returns:The `VirtualDrive` object, if found; otherwise it throws an error.
+    public func findVirtualDisk(name : String) -> VirtualDrive? {
+        if let foundDrive = virtualDrives.first(where: {($0.imagePath as NSString).lastPathComponent == name}) {
+            return foundDrive
+        }
+        return nil
+    }
+    
+    /// Find a free virtual drive.
+    /// - Returns:A virtual drive number.
+    public func findAvailableVirtualDrive() -> Int {
+        var candidate = 0
+        var tryAgain = false
+        
+        repeat {
+            tryAgain = false
+            for v in virtualDrives {
+                if v.driveNumber == candidate {
+                    candidate = candidate + 1
+                    tryAgain = true
+                    break
+                }
+            }
+        } while tryAgain == true
+        
+        return candidate
+    }
+    
     /// Provides data to the DriveWire host.
     ///
     /// Call this function with the data you want to send to the host.
@@ -374,33 +407,89 @@ public class DriveWireHost {
     }
     
     private func OP_NAMEOBJ_MOUNT(data : Data) -> Int {
+        var nameLength = 0
         var result = 0
-        let expectedCount = 259
+        let expectedCount = 2
+        var response : UInt8 = 0
         currentTransaction = OPNAMEOBJMOUNT
         if data.count >= expectedCount {
-            resetState()
+            nameLength = Int(data[1])
+            
+            // We read 2 bytes into this buffer (OP_NAMEOBJ_MOUNT, 1 byte name length)
             result = expectedCount;
             
-            statistics.lastDriveNumber = data[1]
-            delegate?.transactionCompleted(opCode: currentTransaction)
+            processor = OP_NAMEOBJ_MOUNT2
         }
         
         return result
+        
+        func OP_NAMEOBJ_MOUNT2(data : Data) -> Int {
+            if data.count >= nameLength {
+                resetState()
+                result = nameLength;
+                let name = String(bytes: data, encoding: .ascii)!
+                
+                // determine if a named object with this name already exists
+                if let vd = findVirtualDisk(name: name) {
+                    response = UInt8(vd.driveNumber)
+                } else {
+                    do {
+                        let nextFreeDrive = findAvailableVirtualDrive()
+                        try insertVirtualDisk(driveNumber: nextFreeDrive, imagePath: name)
+                        response = UInt8(nextFreeDrive);
+                    } catch {
+                        response = 0
+                    }
+                }
+                delegate?.dataAvailable(host: self, data: Data([response]))
+                delegate?.transactionCompleted(opCode: currentTransaction)
+            }
+            
+            return result
+        }
     }
     
     private func OP_NAMEOBJ_CREATE(data : Data) -> Int {
+        var nameLength = 0
         var result = 0
-        let expectedCount = 259
-        currentTransaction = OPNAMEOBJCREATE
+        let expectedCount = 2
+        var response : UInt8 = 0
+        currentTransaction = OPNAMEOBJMOUNT
         if data.count >= expectedCount {
-            resetState()
+            nameLength = Int(data[1])
+            
+            // We read 2 bytes into this buffer (OP_NAMEOBJ_MOUNT, 1 byte name length)
             result = expectedCount;
             
-            statistics.lastDriveNumber = data[1]
-            delegate?.transactionCompleted(opCode: currentTransaction)
+            processor = OP_NAMEOBJ_MOUNT2
         }
         
         return result
+        
+        func OP_NAMEOBJ_MOUNT2(data : Data) -> Int {
+            if data.count >= nameLength {
+                resetState()
+                result = nameLength;
+                let name = String(bytes: data, encoding: .ascii)!
+                
+                // determine if a named object with this name already exists
+                if let vd = try findVirtualDisk(name: name) {
+                    response = 0
+                } else {
+                    let nextFreeDrive = findAvailableVirtualDrive()
+                    do {
+                        try insertVirtualDisk(driveNumber: nextFreeDrive, imagePath: name)
+                        response = UInt8(nextFreeDrive);
+                    } catch {
+                        
+                    }
+                }
+                delegate?.dataAvailable(host: self, data: Data([response]))
+                delegate?.transactionCompleted(opCode: currentTransaction)
+            }
+            
+            return result
+        }
     }
     
     private func OP_NOP(data : Data) -> Int {
@@ -640,7 +729,7 @@ public class DriveWireHost {
     }
     
     private func OP_OPCODE(data: Data) -> Int {
-        var result = 0
+        var result = 1
         
         setupWatchdog()
         
@@ -837,6 +926,9 @@ extension DriveWireHost {
         /// A path to a file that contains the drive's data.
         var imagePath = ""
         
+        /// The path path where named object files exist.
+        var basePath = NSHomeDirectory()
+        
         private var storageContainer = Data()
         
         /// Creates a new virtual drive.
@@ -846,8 +938,14 @@ extension DriveWireHost {
         ///     - imagePath: A path to a file that contains the drive's data.
         init(driveNumber : Int, imagePath : String) throws {
             self.driveNumber = driveNumber
-            self.imagePath = imagePath
-            self.storageContainer = try Data(contentsOf:(URL(fileURLWithPath: imagePath)))
+
+            // if imagePath is not an absolute pathlist, assign it one.
+            if imagePath.starts(with: "/") {
+                self.imagePath = imagePath
+            } else {
+                self.imagePath = basePath + "/" + imagePath
+            }
+            self.storageContainer = try Data(contentsOf:(URL(fileURLWithPath: self.imagePath)))
         }
         
         /// Reads a 256 byte sector from a virtual disk.

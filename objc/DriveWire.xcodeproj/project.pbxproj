@@ -99,9 +99,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0763232A94623FD3213981B1 /* Pods-DriveWire MacServer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriveWire MacServer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DriveWire MacServer/Pods-DriveWire MacServer.debug.xcconfig"; sourceTree = "<group>"; };
 		32DBCF750370BD2300C91783 /* DriveWire_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriveWire_Prefix.pch; sourceTree = "<group>"; };
-		435458113AA42290E98DB18A /* Pods-DriveWire.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriveWire.release.xcconfig"; path = "Pods/Target Support Files/Pods-DriveWire/Pods-DriveWire.release.xcconfig"; sourceTree = "<group>"; };
 		487F4A91F5C1CBD37CD4AFFE /* libPods-DriveWire.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DriveWire.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		680612D31ADFC85200B1C502 /* Machines.psd */ = {isa = PBXFileReference; lastKnownFileType = file; name = Machines.psd; path = assets/Machines.psd; sourceTree = "<group>"; };
 		6809AEED0F6C0DB6000BB954 /* drive.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = drive.jpg; path = assets/drive.jpg; sourceTree = "<group>"; };
@@ -229,8 +227,6 @@
 		68C4C9501F98BB150077A72D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		68D291EE1FFE6BE10015B8DC /* DriveWire.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = DriveWire.sdef; sourceTree = "<group>"; };
 		68D292181FFED1600015B8DC /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
-		959227020E964D36700A544E /* Pods-DriveWire.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriveWire.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DriveWire/Pods-DriveWire.debug.xcconfig"; sourceTree = "<group>"; };
-		BD40BD754E2481641C1DCDF9 /* Pods-DriveWire MacServer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DriveWire MacServer.release.xcconfig"; path = "Pods/Target Support Files/Pods-DriveWire MacServer/Pods-DriveWire MacServer.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -553,10 +549,6 @@
 		95D124CD3F955202ECB1EC9E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0763232A94623FD3213981B1 /* Pods-DriveWire MacServer.debug.xcconfig */,
-				BD40BD754E2481641C1DCDF9 /* Pods-DriveWire MacServer.release.xcconfig */,
-				959227020E964D36700A544E /* Pods-DriveWire.debug.xcconfig */,
-				435458113AA42290E98DB18A /* Pods-DriveWire.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1055,7 +1047,6 @@
 		};
 		68ADDE9D096B723F002324CE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 959227020E964D36700A544E /* Pods-DriveWire.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
@@ -1114,7 +1105,6 @@
 		};
 		68ADDE9E096B723F002324CE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 435458113AA42290E98DB18A /* Pods-DriveWire.release.xcconfig */;
 			buildSettings = {
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
