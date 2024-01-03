@@ -8,35 +8,32 @@
 import SwiftUI
 import ORSSerial
 
-/*
  struct SerialPortSelector: View {
-    @ObservedObject var serialPortManager = ObservableSerialPortManager()
-    @State var portName = ""
-    @State var testName = ""
-    var body: some View {
-        Picker("Serial port:", selection: $portName, content: {
-            ForEach(serialPortManager.availablePorts, id: \.self) { port in
-                Text(port.description)
-            }
-        })
-//        List(serialPortManager.availablePorts, id: \.path) { port in
-//            Text(port.name)
-//        }
+     @Binding var selectedPortName : String
+     
+     var body: some View {
+         HStack {
+             Picker("Serial port:", selection: $selectedPortName) {
+                 ForEach(ObservableSerialPortManager().availablePorts, id: \.self) { port in
+                     Text(port.name).tag(port.name)
+                 }
+             }
+        }
     }
 }
- */
+
 struct ContentView: View {
     @Binding var document: DriveWireDocument
-    @State var portName : String = ""
-    let serialDriver = DriveWireSerialDriver(serialPort: "/dev/cu.usbserial-FT079LCR3")
-    
+    @State var selectedName : String = ObservableSerialPortManager().availablePorts[0].name
+    @State var serialDriver = DriveWireSerialDriver()
     var body: some View {
         HStack{
             TextEditor(text: $document.text)
         }
-    }
-    func my() {
-        print(portName)
+        SerialPortSelector(selectedPortName: $selectedName).onChange(of: selectedName) { oldValue, newValue in
+            serialDriver.portName = newValue
+            serialDriver.baudRate = 230400
+        }
     }
 }
 
@@ -66,7 +63,7 @@ class ObservableSerialPortManager: ObservableObject {
     }
 
     private func updateAvailablePorts() {
-        availablePorts = portManager.availablePorts as? [ORSSerialPort] ?? []
+        availablePorts = portManager.availablePorts as [ORSSerialPort]
     }
 }
 

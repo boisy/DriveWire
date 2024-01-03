@@ -330,7 +330,7 @@ public class DriveWireHost {
         
         return candidate
     }
-    
+     
     /// Provides data to the DriveWire host.
     ///
     /// Call this function with the data you want to send to the host.
@@ -406,8 +406,9 @@ public class DriveWireHost {
         return result
     }
     
+    private var nameLength = 0
+    
     private func OP_NAMEOBJ_MOUNT(data : Data) -> Int {
-        var nameLength = 0
         var result = 0
         let expectedCount = 2
         var response : UInt8 = 0

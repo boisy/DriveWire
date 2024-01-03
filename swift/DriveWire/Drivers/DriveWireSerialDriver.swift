@@ -12,12 +12,46 @@ import ORSSerial
 /// This class provides the ability to connect to a guest on a serial port. Provide the
 /// device name of the serial port in ``init(serialPort:)``, then start the
 /// driver by calling ``run()``. When you're ready for the driver to stop, set ``quit`` to `true`.
-class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate {
+class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate, ObservableObject {
     /// A flag that when set to `true`,  causes the driver to stop running.
     public var quit = false
     
-    private var performDump = true
-    private var port : ORSSerialPort?
+    /// A flag that when set to `true`,  causes serial traffic to log.
+    public var logging = false
+         
+    private var serialPort : ORSSerialPort?
+    
+    /// The serial port associated with this driver.
+    public var portName : String {
+        get {
+            return serialPort!.name
+        }
+        set(newPortName) {
+            if let sp = serialPort {
+                self.stop()
+                sp.close()
+            }
+            
+            if let serialPort = ORSSerialPort(path: "/dev/cu." + newPortName) {
+                self.serialPort = serialPort
+                serialPort.delegate = self
+                serialPort.open()
+                self.run()
+            }
+        }
+    }
+    
+    /// The serial port's speed.'
+    public var baudRate : NSNumber {
+        get {
+            return serialPort!.baudRate
+        }
+        set(newBaudRate) {
+            serialPort?.baudRate = newBaudRate
+        }
+    }
+    
+    private var thread : Thread?
     
     /// The host object.
     internal var host : DriveWireHost?
@@ -38,7 +72,7 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     @_documentation(visibility: private)
     internal func serialPort(_ serialPort: ORSSerialPort, didReceive data: Data) {
         var d = data
-        if performDump == true {
+        if logging == true {
             data.dump(prefix: "->")
         }
         host?.send(data: &d)
@@ -50,10 +84,13 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     
     @_documentation(visibility: private)
     internal func dataAvailable(host: DriveWireHost, data: Data) {
-        if performDump == true {
+        if logging == true {
             data.dump(prefix: "<-")
         }
-        port?.send(data)
+        serialPort?.send(data)
+    }
+    
+    override init() {
     }
     
     /// Create a driver that connects to a serial port.
@@ -61,7 +98,7 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     /// - Parameters:
     ///     - serialPort: The name of the serial port device to connect to.
     convenience init(serialPort: String) {
-        self.init(serialPort: serialPort, baudRate: 230400)
+        self.init(portName: serialPort, baudRate: 230400)
     }
     
     /// Create a driver that connects to a serial port with a specific baud rate.
@@ -69,24 +106,27 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     /// - Parameters:
     ///     - serialPort: The name of the serial port device to connect to.
     ///     - baudRate: The number of bits per second of the device.
-    init(serialPort: String, baudRate: NSNumber) {
+    init(portName: String, baudRate: NSNumber) {
         super.init()
         host = DriveWireHost(delegate: self)
-        port = ORSSerialPort(path: serialPort)
-        if let port = port {
-            port.delegate = self
-            port.baudRate = baudRate
-            port.open()
-        }
+        self.serialPort = ORSSerialPort(path: portName)
+        self.portName = portName
     }
     
     /// Start the driver.
     ///
     /// This method returns when ``quit`` is `true`.
     public func run() {
-        while self.quit == false {
-            RunLoop.current.run(until: Date(timeIntervalSinceNow: 10.0))
-        }
+        thread = Thread(block: {
+            while self.thread?.isCancelled == false {
+                Thread.sleep(until: Date(timeIntervalSinceNow: 1.0))
+            }
+        })
+        thread?.start()
+    }
+    
+    public func stop() {
+        thread?.cancel()
     }
 }
 
