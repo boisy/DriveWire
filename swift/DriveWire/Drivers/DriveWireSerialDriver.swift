@@ -91,6 +91,8 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     }
     
     override init() {
+        super.init()
+        host = DriveWireHost(delegate: self)
     }
     
     /// Create a driver that connects to a serial port.
@@ -119,7 +121,7 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     public func run() {
         thread = Thread(block: {
             while self.thread?.isCancelled == false {
-                Thread.sleep(until: Date(timeIntervalSinceNow: 1.0))
+                RunLoop.current.run(until: Date(timeIntervalSinceNow: 1.0))
             }
         })
         thread?.start()
