@@ -8,6 +8,5 @@
 
 ### Host control
 
-- ``run()``
 - ``quit``
 - ``host``

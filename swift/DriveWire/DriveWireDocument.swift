@@ -10,31 +10,28 @@ import UniformTypeIdentifiers
 import ORSSerial
 extension UTType {
     static var exampleText: UTType {
-        UTType(importedAs: "com.example.plain-text")
+        UTType(importedAs: "com.boisypitre.drivewire-document")
     }
 }
 
-struct DriveWireDocument: FileDocument {
-    var text: String
-    var port : String?
-
-    init(text: String = "Hello, world!") {
-        self.text = text
-    }
+final class DriveWireDocument: FileDocument {
+    @Published var serialDriver = DriveWireSerialDriver()
 
     static var readableContentTypes: [UTType] { [.exampleText] }
 
+    init() {
+    }
+
     init(configuration: ReadConfiguration) throws {
-        guard let data = configuration.file.regularFileContents,
-              let string = String(data: data, encoding: .utf8)
+        guard let data = configuration.file.regularFileContents
         else {
             throw CocoaError(.fileReadCorruptFile)
         }
-        text = string
+        self.serialDriver = try JSONDecoder().decode(DriveWireSerialDriver.self, from: data)
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        let data = text.data(using: .utf8)!
+        let data = try JSONEncoder().encode(serialDriver)
         return .init(regularFileWithContents: data)
     }
 }

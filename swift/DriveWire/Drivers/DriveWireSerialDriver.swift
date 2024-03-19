@@ -10,48 +10,52 @@ import ORSSerial
 /// Provides a serial interface to a DriveWire host.
 ///
 /// This class provides the ability to connect to a guest on a serial port. Provide the
-/// device name of the serial port in ``init(serialPort:)``, then start the
-/// driver by calling ``run()``. When you're ready for the driver to stop, set ``quit`` to `true`.
-class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate, ObservableObject {
+/// device name of the serial port in ``init(serialPort:)``
+/// When you're ready for the driver to stop, set ``quit`` to `true`.
+class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate, ObservableObject, Codable {
+    
+    enum CodingKeys: String, CodingKey {
+        case logging
+        case portName
+        case baudRate
+        case log
+        case host
+    }
+    
+    /// The log of the driver.
+    public var log = ""
+    
     /// A flag that when set to `true`,  causes the driver to stop running.
     public var quit = false
     
     /// A flag that when set to `true`,  causes serial traffic to log.
-    public var logging = false
+    public var logging = true
          
     private var serialPort : ORSSerialPort?
     
     /// The serial port associated with this driver.
-    public var portName : String {
-        get {
-            return serialPort!.name
-        }
-        set(newPortName) {
+    public var portName : String = "" {
+        didSet {
             if let sp = serialPort {
                 self.stop()
                 sp.close()
             }
             
-            if let serialPort = ORSSerialPort(path: "/dev/cu." + newPortName) {
+            if let serialPort = ORSSerialPort(path: "/dev/cu." + self.portName) {
                 self.serialPort = serialPort
+                self.serialPort?.baudRate = NSNumber(value: self.baudRate)
                 serialPort.delegate = self
                 serialPort.open()
-                self.run()
             }
         }
     }
     
-    /// The serial port's speed.'
-    public var baudRate : NSNumber {
-        get {
-            return serialPort!.baudRate
-        }
-        set(newBaudRate) {
-            serialPort?.baudRate = newBaudRate
+    /// The serial port's speed.
+    public var baudRate = 57600 {
+        didSet {
+            serialPort?.baudRate = NSNumber(value: baudRate)
         }
     }
-    
-    private var thread : Thread?
     
     /// The host object.
     internal var host : DriveWireHost?
@@ -115,20 +119,33 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
         self.portName = portName
     }
     
-    /// Start the driver.
-    ///
-    /// This method returns when ``quit`` is `true`.
-    public func run() {
-        thread = Thread(block: {
-            while self.thread?.isCancelled == false {
-                RunLoop.current.run(until: Date(timeIntervalSinceNow: 1.0))
-            }
-        })
-        thread?.start()
+    required init(from decoder: Decoder) throws {
+        super.init()
+        do {
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            self.portName = try values.decode(String.self, forKey: .portName)
+//            self.serialPort = ORSSerialPort(path: self.portName)
+            self.baudRate = try values.decode(Int.self, forKey: .baudRate)
+            self.log = try values.decode(String.self, forKey: .log)
+            self.host = try values.decode(DriveWireHost.self, forKey: .host)
+            self.host?.delegate = self
+        } catch {
+            print("\(error)")
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(portName, forKey:.portName)
+        try container.encode(baudRate, forKey:.baudRate)
+        try container.encode(log, forKey:.log)
+        try container.encode(host, forKey:.host)
     }
     
     public func stop() {
-        thread?.cancel()
+        self.serialPort?.delegate = nil
+        self.serialPort?.close()
+        self.serialPort = nil
     }
 }
 

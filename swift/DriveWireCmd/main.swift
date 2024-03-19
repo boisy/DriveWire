@@ -7,7 +7,7 @@
 
 import Foundation
 
-let d = DriveWireSerialDriver(serialPort: "/dev/cu.usbserial-FTVA079L", baudRate: 57600)
+let d = DriveWireSerialDriver(portName: "/dev/cu.usbserial-FTVA079L", baudRate: 57600)
 //let d = DriveWireSerialDriver(serialPort: "/dev/cu.usbserial-FT079LCR3", baudRate: 230400)
 d.logging = true
 do {
@@ -20,6 +20,5 @@ do {
     
 }
 
-d.run()
 print("Hello, World!")
 

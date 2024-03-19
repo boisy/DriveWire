@@ -58,42 +58,60 @@ struct SerialPortSelector: View {
 
 struct ContentView: View {
     @Binding var document: DriveWireDocument
-    @State var selectedName : String = "NONE"
+    @State var selectedName = "NONE"
     @State var selectedBaud = "57600"
-    @State var selectedDisk = ""
-    var serialDriver = DriveWireSerialDriver()
+    @State var selectedDisk0 = ""
+    @State var selectedDisk1 = ""
+    @State var selectedDisk2 = ""
+    @State var selectedDisk3 = ""
     
     var body: some View {
         let drives: [DriveSelector] = [
-            DriveSelector(selectedDisk: $selectedDisk),
-            DriveSelector(selectedDisk: $selectedDisk),
-            DriveSelector(selectedDisk: $selectedDisk),
-            DriveSelector(selectedDisk: $selectedDisk)
+            DriveSelector(selectedDisk: $selectedDisk0),
+            DriveSelector(selectedDisk: $selectedDisk1),
+            DriveSelector(selectedDisk: $selectedDisk2),
+            DriveSelector(selectedDisk: $selectedDisk3)
         ]
         
         drives[0]
-            .onChange(of: selectedDisk) { oldValue, newValue in
+            .onChange(of: selectedDisk0) { oldValue, newValue in
             do {
-                try serialDriver.host?.insertVirtualDisk(driveNumber: 0, imagePath: newValue)
+                try document.serialDriver.host?.insertVirtualDisk(driveNumber: 0, imagePath: newValue)
             } catch {
                 
             }
-        }
-        DriveSelector(selectedDisk: $selectedDisk).onChange(of: selectedDisk) { oldValue, newValue in
+            }.onAppear(perform: {
+                guard let host = document.serialDriver.host else {
+                    return
+                }
+                if host.virtualDrives.count > 0 {
+                    let diskName = host.virtualDrives[0].imagePath
+                    selectedDisk0 = diskName
+                }
+            })
+
+        drives[1]
+            .onChange(of: selectedDisk1) { oldValue, newValue in
             do {
-                try serialDriver.host?.insertVirtualDisk(driveNumber: 0, imagePath: newValue)
+                try document.serialDriver.host?.insertVirtualDisk(driveNumber: 1, imagePath: newValue)
             } catch {
-                
             }
-        }
+            }
+
         HStack{
-            TextEditor(text: $document.text)
+            TextEditor(text: $document.serialDriver.log)
         }
+        
         SerialPortSelector(selectedPortName: $selectedName, selectedBaudRate: $selectedBaud).onChange(of: selectedName) { oldValue, newValue in
-            serialDriver.portName = newValue
+            document.serialDriver.portName = newValue
         }.onChange(of: selectedBaud) { oldValue, newValue in
-            serialDriver.baudRate = NSNumber(value: Int(newValue)!)
-        }
+            document.serialDriver.baudRate = Int(newValue)!
+        }.onDisappear(perform: {
+            document.serialDriver.stop()
+        }).onAppear(perform: {
+            selectedName = document.serialDriver.portName
+            selectedBaud = String(document.serialDriver.baudRate)
+        })
     }
 }
 
@@ -127,8 +145,10 @@ class ObservableSerialPortManager: ObservableObject {
     }
 }
 
+
 /*
  #Preview {
     ContentView(document: .constant(DriveWireDocument()))
 }
+
 */

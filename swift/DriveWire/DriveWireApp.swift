@@ -10,8 +10,8 @@ import SwiftUI
 @main
 struct DriveWireApp: App {
     var body: some Scene {
-        DocumentGroup(newDocument: DriveWireDocument()) { file in
-            ContentView(document: file.$document)
+        DocumentGroup(newDocument: DriveWireDocument()) { configuration in
+            ContentView(document: configuration.$document)
         }
     }
 }

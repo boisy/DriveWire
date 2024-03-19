@@ -8,7 +8,7 @@
 import Foundation
 
 /// An interface for receiving information from the DriveWire host.
-protocol DriveWireDelegate {
+public protocol DriveWireDelegate {
     /// Informs the delegate that there is available data.
     ///
     /// - Parameters:
@@ -49,11 +49,15 @@ public enum DriveWireError : Error {
 ///
 /// The basis of communication between the guest and host is a documented set of uni- and bi-directional messages called *transactions*. A transaction is a series of one or more packets that the guest and host pass to each other.
 ///
-public class DriveWireHost {
+public class DriveWireHost : Codable {
+    enum CodingKeys: String, CodingKey {
+        case virtualDrives
+    }
+
     /// Statistical information about the host.
     public var statistics = DriveWireStatistics()
     private var serialBuffer = Data()
-    private var delegate : DriveWireDelegate?
+    public var delegate : DriveWireDelegate?
     /// The DriveWire transaction code of the transaction that the host is currently executing.
     ///
     /// Inspect this property to determine which transaction the host is currently executing.
@@ -240,13 +244,12 @@ public class DriveWireHost {
         case OP_WIREBUG_GO = 71
     }
     
-    /// Creates a DriveWire host.
-    ///
-    /// - Parameters:
-    ///     - delegate: The delegate that receives messages.
-    init(delegate : DriveWireDelegate) {
-        self.delegate = delegate
-        
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(virtualDrives, forKey:.virtualDrives)
+    }
+    
+    private func setupTransactions() {
         dwTransaction.append(DWOp(opcode:OPDWINIT, processor: self.OP_DWINIT))
         dwTransaction.append(DWOp(opcode:OPNAMEOBJMOUNT, processor: self.OP_NAMEOBJ_MOUNT))
         dwTransaction.append(DWOp(opcode:OPNAMEOBJCREATE, processor: self.OP_NAMEOBJ_CREATE))
@@ -278,6 +281,26 @@ public class DriveWireHost {
         dwTransaction.append(DWOp(opcode:OPSERWRITEM, processor: self.OP_SERWRITEM))
         processor = OP_OPCODE
     }
+
+    public required init(from decoder: Decoder) throws {
+        do {
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            self.virtualDrives = try values.decode([VirtualDrive].self, forKey: .virtualDrives)
+            setupTransactions()
+        } catch {
+            print("\(error)")
+        }
+    }
+    
+    /// Creates a DriveWire host.
+    ///
+    /// - Parameters:
+    ///     - delegate: The delegate that receives messages.
+    init(delegate : DriveWireDelegate) {
+        self.delegate = delegate
+        
+        setupTransactions()
+    }
     
     /// Inserts a virtual disk into the virtual drive.
     ///
@@ -286,6 +309,7 @@ public class DriveWireHost {
     ///     - imagePath: The page the virtual disk image to insert.
     public func insertVirtualDisk(driveNumber : Int, imagePath : String) throws {
         if let _ = virtualDrives.first(where: { $0.driveNumber == driveNumber }) {
+//            ejectVirtualDisk(driveNumber: driveNumber)
             // A drive with this number already exists... disallow it.
             throw DriveWireError.driveAlreadyExists
         }
@@ -336,7 +360,7 @@ public class DriveWireHost {
     /// Call this function with the data you want to send to the host.
     ///
     /// - Parameters:
-    ///     - data: Data to providen to the host.
+    ///     - data: Data to provide to the host.
     public func send(data : inout Data) {
         var bytesConsumed = 0
         
@@ -346,7 +370,7 @@ public class DriveWireHost {
         {
             bytesConsumed = self.processor!(serialBuffer)
             
-            if bytesConsumed > 0 {
+            if bytesConsumed > 0  && serialBuffer.count >= bytesConsumed {
                 // chop off consumed bytes
                 serialBuffer.replaceSubrange(0..<bytesConsumed, with: Data([]))
             }
@@ -920,7 +944,7 @@ extension Data {
 
 extension DriveWireHost {
     /// A representation of a storage device.
-    public class VirtualDrive {
+    public class VirtualDrive : Codable {
         /// The drive number for this drive.
         var driveNumber = 0
         
