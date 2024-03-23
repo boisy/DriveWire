@@ -8,6 +8,36 @@
 import SwiftUI
 import ORSSerial
 
+struct VirtualChannelView : View {
+    var channelNumber : Int
+    var body : some View {
+        HStack {
+            Label("Channel \(channelNumber)", systemImage: "")
+            LEDView()
+        }
+    }
+}
+
+struct VirtualChannelsView : View {
+    var body : some View {
+        GroupBox(label:
+                    Label("Virtual Serial Channels", systemImage:
+                            "bolt.horizontal.fill")
+        ) {
+            ScrollView {
+                VirtualChannelView(channelNumber: 0)
+                VirtualChannelView(channelNumber: 1)
+                VirtualChannelView(channelNumber: 2)
+                VirtualChannelView(channelNumber: 3)
+                VirtualChannelView(channelNumber: 4)
+                VirtualChannelView(channelNumber: 5)
+                VirtualChannelView(channelNumber: 6)
+                VirtualChannelView(channelNumber: 7)
+            }
+        }.padding(10)
+    }
+}
+
 struct DriveSelector: View {
     let buttonSize = 50.0
     @Binding var selectedDisk : String
@@ -63,48 +93,54 @@ struct StatisticsView: View {
          VStack {
              let labelWidth = 100.0
              HStack {
-               Text("Last Opcode:").frame(width: labelWidth, alignment: .trailing)
-                 TextField("", value: $document.serialDriver.host.statistics.lastOpCode, formatter: NumberFormatter())
+                 HStack {
+                     Text("Last Opcode:").frame(width: labelWidth, alignment: .trailing)
+                     TextField("", value: $document.serialDriver.host.statistics.lastOpCode, formatter: NumberFormatter())
+                 }
+                 HStack {
+                     Text("Last LSN:").frame(width: labelWidth, alignment: .trailing)
+                     TextField("", value: $document.serialDriver.host.statistics.lastLSN, formatter: NumberFormatter())
+                 }
              }
              HStack {
-               Text("Last Drive:").frame(width: labelWidth, alignment: .trailing)
-                 TextField("", value: $document.serialDriver.host.statistics.lastDriveNumber, formatter: NumberFormatter())
+                 HStack {
+                     Text("Sectors Read:").frame(width: labelWidth, alignment: .trailing)
+                     TextField("", value: $document.serialDriver.host.statistics.readCount, formatter: NumberFormatter())
+                 }
+                 HStack {
+                     Text("Sectors Written:").frame(width: labelWidth, alignment: .trailing)
+                     TextField("", value: $document.serialDriver.host.statistics.writeCount, formatter: NumberFormatter())
+                 }
              }
              HStack {
-               Text("Last LSN:").frame(width: labelWidth, alignment: .trailing)
-                 TextField("", value: $document.serialDriver.host.statistics.lastLSN, formatter: NumberFormatter())
+                 HStack {
+                     Text("Last GetStat:").frame(width: labelWidth, alignment: .trailing)
+                     TextField("", value: $document.serialDriver.host.statistics.lastGetStat, formatter: NumberFormatter())
+                 }
+                 HStack {
+                     Text("Last SetStat:").frame(width: labelWidth, alignment: .trailing)
+                     TextField("", value: $document.serialDriver.host.statistics.lastSetStat, formatter: NumberFormatter())
+                 }
              }
              HStack {
-               Text("Sectors Read:").frame(width: labelWidth, alignment: .trailing)
-                 TextField("", value: $document.serialDriver.host.statistics.readCount, formatter: NumberFormatter())
+                 HStack {
+                     Text("Read Retries:").frame(width: labelWidth, alignment: .trailing)
+                     TextField("", value: $document.serialDriver.host.statistics.reReadCount, formatter: NumberFormatter())
+                 }
+                 HStack {
+                     Text("Write Retries:").frame(width: labelWidth, alignment: .trailing)
+                     TextField("", value: $document.serialDriver.host.statistics.reWriteCount, formatter: NumberFormatter())
+                 }
              }
              HStack {
-               Text("Sectors Written:").frame(width: labelWidth, alignment: .trailing)
-                 TextField("", value: $document.serialDriver.host.statistics.writeCount, formatter: NumberFormatter())
-             }
-             HStack {
-               Text("Last GetStat:").frame(width: labelWidth, alignment: .trailing)
-                 TextField("", value: $document.serialDriver.host.statistics.lastGetStat, formatter: NumberFormatter())
-             }
-             HStack {
-               Text("Last SetStat:").frame(width: labelWidth, alignment: .trailing)
-                 TextField("", value: $document.serialDriver.host.statistics.lastSetStat, formatter: NumberFormatter())
-             }
-             HStack {
-               Text("Read Retries:").frame(width: labelWidth, alignment: .trailing)
-                 TextField("", value: $document.serialDriver.host.statistics.reReadCount, formatter: NumberFormatter())
-             }
-             HStack {
-               Text("Write Retries:").frame(width: labelWidth, alignment: .trailing)
-                 TextField("", value: $document.serialDriver.host.statistics.reWriteCount, formatter: NumberFormatter())
-             }
-             HStack {
-               Text("% Reads OK:").frame(width: labelWidth, alignment: .trailing)
-                 TextField("", value: $document.serialDriver.host.statistics.percentReadsOK, formatter: NumberFormatter())
-             }
-             HStack {
-               Text("% Writes OK:").frame(width: labelWidth, alignment: .trailing)
-                 TextField("", value: $document.serialDriver.host.statistics.percentWritesOK, formatter: NumberFormatter())
+                 HStack {
+                     Text("% Reads OK:").frame(width: labelWidth, alignment: .trailing)
+                     TextField("", value: $document.serialDriver.host.statistics.percentReadsOK, formatter: NumberFormatter())
+                 }
+                 HStack {
+                     Text("% Writes OK:").frame(width: labelWidth, alignment: .trailing)
+                     TextField("", value: $document.serialDriver.host.statistics.percentWritesOK, formatter: NumberFormatter())
+                 }
              }
          }
     }
@@ -166,32 +202,30 @@ struct ContentView: View {
 
         HStack{
             GroupBox(label:
-                        Label("Logging", systemImage: "list.bullet")
+                        Label("Communication", systemImage: "list.bullet")
             ) {
-                TextEditor(text: $document.serialDriver.host.log)
+                SerialPortSelector(selectedPortName: $selectedName, selectedBaudRate: $selectedBaud).onChange(of: selectedName) { oldValue, newValue in
+                    document.serialDriver.portName = newValue
+                }.onChange(of: selectedBaud) { oldValue, newValue in
+                    document.serialDriver.baudRate = Int(newValue)!
+                }.onDisappear(perform: {
+                    document.serialDriver.stop()
+                }).onAppear(perform: {
+                    selectedName = document.serialDriver.portName
+                    selectedBaud = String(document.serialDriver.baudRate)
+                }).padding(10)
             }.padding(10)
-            GroupBox(label:
-                        Label("Virtual Serial Channels", systemImage:
-                                "bolt.horizontal.fill")
-            ) {
-                
-            }.padding(10)
+
+            VirtualChannelsView().padding(10)
+
         }.padding(10)
         
         GroupBox(label:
-                    Label("Communication", systemImage: "list.bullet")
+                    Label("Logging", systemImage: "list.bullet")
         ) {
-            SerialPortSelector(selectedPortName: $selectedName, selectedBaudRate: $selectedBaud).onChange(of: selectedName) { oldValue, newValue in
-                document.serialDriver.portName = newValue
-            }.onChange(of: selectedBaud) { oldValue, newValue in
-                document.serialDriver.baudRate = Int(newValue)!
-            }.onDisappear(perform: {
-                document.serialDriver.stop()
-            }).onAppear(perform: {
-                selectedName = document.serialDriver.portName
-                selectedBaud = String(document.serialDriver.baudRate)
-            }).padding(10)
+            TextEditor(text: $document.serialDriver.host.log)
         }.padding(10)
+        
     }
 }
 
