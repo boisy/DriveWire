@@ -58,7 +58,7 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     }
     
     /// The host object.
-    internal var host : DriveWireHost?
+    internal var host : DriveWireHost = DriveWireHost()
 
     @_documentation(visibility: private)
     internal func serialPortWasRemovedFromSystem(_ serialPort: ORSSerialPort) {
@@ -77,9 +77,9 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     internal func serialPort(_ serialPort: ORSSerialPort, didReceive data: Data) {
         var d = data
         if logging == true {
-            data.dump(prefix: "->")
+//            data.dump(prefix: "->")
         }
-        host?.send(data: &d)
+        host.send(data: &d)
     }
     
     @_documentation(visibility: private)
@@ -89,7 +89,7 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     @_documentation(visibility: private)
     internal func dataAvailable(host: DriveWireHost, data: Data) {
         if logging == true {
-            data.dump(prefix: "<-")
+//            data.dump(prefix: "<-")
         }
         serialPort?.send(data)
     }
@@ -128,7 +128,7 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
             self.baudRate = try values.decode(Int.self, forKey: .baudRate)
             self.log = try values.decode(String.self, forKey: .log)
             self.host = try values.decode(DriveWireHost.self, forKey: .host)
-            self.host?.delegate = self
+            self.host.delegate = self
         } catch {
             print("\(error)")
         }

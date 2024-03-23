@@ -9,7 +9,7 @@ import SwiftUI
 import ORSSerial
 
 struct DriveSelector: View {
-    let buttonSize = 80.0
+    let buttonSize = 50.0
     @Binding var selectedDisk : String
     var body: some View {
         HStack {
@@ -29,7 +29,7 @@ struct DriveSelector: View {
                 .cornerRadius(buttonSize / 6.0)
                 .buttonStyle(PlainButtonStyle())
             VStack {
-                TextField("Disk Image", text: $selectedDisk)
+                TextField("Disk Image", text: $selectedDisk).padding(10)
             }
         }
     }
@@ -40,7 +40,7 @@ struct SerialPortSelector: View {
      @Binding var selectedBaudRate : String
      
      var body: some View {
-         HStack {
+         VStack {
              Picker("Serial port:", selection: $selectedPortName) {
                  Text("No device").tag("NONE")
                  ForEach(ObservableSerialPortManager().availablePorts, id: \.self) { port in
@@ -56,6 +56,60 @@ struct SerialPortSelector: View {
     }
 }
 
+struct StatisticsView: View {
+    @Binding var document: DriveWireDocument
+
+     var body: some View {
+         VStack {
+             let labelWidth = 100.0
+             HStack {
+               Text("Last Opcode:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", value: $document.serialDriver.host.statistics.lastOpCode, formatter: NumberFormatter())
+             }
+             HStack {
+               Text("Last Drive:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", value: $document.serialDriver.host.statistics.lastDriveNumber, formatter: NumberFormatter())
+             }
+             HStack {
+               Text("Last LSN:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", value: $document.serialDriver.host.statistics.lastLSN, formatter: NumberFormatter())
+             }
+             HStack {
+               Text("Sectors Read:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", value: $document.serialDriver.host.statistics.readCount, formatter: NumberFormatter())
+             }
+             HStack {
+               Text("Sectors Written:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", value: $document.serialDriver.host.statistics.writeCount, formatter: NumberFormatter())
+             }
+             HStack {
+               Text("Last GetStat:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", value: $document.serialDriver.host.statistics.lastGetStat, formatter: NumberFormatter())
+             }
+             HStack {
+               Text("Last SetStat:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", value: $document.serialDriver.host.statistics.lastSetStat, formatter: NumberFormatter())
+             }
+             HStack {
+               Text("Read Retries:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", value: $document.serialDriver.host.statistics.reReadCount, formatter: NumberFormatter())
+             }
+             HStack {
+               Text("Write Retries:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", value: $document.serialDriver.host.statistics.reWriteCount, formatter: NumberFormatter())
+             }
+             HStack {
+               Text("% Reads OK:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", value: $document.serialDriver.host.statistics.percentReadsOK, formatter: NumberFormatter())
+             }
+             HStack {
+               Text("% Writes OK:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", value: $document.serialDriver.host.statistics.percentWritesOK, formatter: NumberFormatter())
+             }
+         }
+    }
+}
+
 struct ContentView: View {
     @Binding var document: DriveWireDocument
     @State var selectedName = "NONE"
@@ -64,54 +118,80 @@ struct ContentView: View {
     @State var selectedDisk1 = ""
     @State var selectedDisk2 = ""
     @State var selectedDisk3 = ""
-    
-    var body: some View {
-        let drives: [DriveSelector] = [
-            DriveSelector(selectedDisk: $selectedDisk0),
-            DriveSelector(selectedDisk: $selectedDisk1),
-            DriveSelector(selectedDisk: $selectedDisk2),
-            DriveSelector(selectedDisk: $selectedDisk3)
-        ]
-        
-        drives[0]
-            .onChange(of: selectedDisk0) { oldValue, newValue in
-            do {
-                try document.serialDriver.host?.insertVirtualDisk(driveNumber: 0, imagePath: newValue)
-            } catch {
-                
-            }
-            }.onAppear(perform: {
-                guard let host = document.serialDriver.host else {
-                    return
-                }
-                if host.virtualDrives.count > 0 {
-                    let diskName = host.virtualDrives[0].imagePath
-                    selectedDisk0 = diskName
-                }
-            })
 
-        drives[1]
-            .onChange(of: selectedDisk1) { oldValue, newValue in
-            do {
-                try document.serialDriver.host?.insertVirtualDisk(driveNumber: 1, imagePath: newValue)
-            } catch {
-            }
-            }
+    var body: some View {
+        HStack {
+            GroupBox(label:
+                        Label("Disks", systemImage: "externaldrive")
+            ) {
+                HStack {
+                    VStack {
+                        let drives: [DriveSelector] = [
+                            DriveSelector(selectedDisk: $selectedDisk0),
+                            DriveSelector(selectedDisk: $selectedDisk1),
+                            DriveSelector(selectedDisk: $selectedDisk2),
+                            DriveSelector(selectedDisk: $selectedDisk3)
+                        ]
+                        
+                        drives[0]
+                            .onChange(of: selectedDisk0) { oldValue, newValue in
+                                do {
+                                    try document.serialDriver.host.insertVirtualDisk(driveNumber: 0, imagePath: newValue)
+                                } catch {
+                                    
+                                }
+                            }.onAppear(perform: {
+                                if document.serialDriver.host.virtualDrives.count > 0 {
+                                    let diskName = document.serialDriver.host.virtualDrives[0].imagePath
+                                    selectedDisk0 = diskName
+                                }
+                            })
+                        
+                        drives[1]
+                            .onChange(of: selectedDisk1) { oldValue, newValue in
+                                do {
+                                    try document.serialDriver.host.insertVirtualDisk(driveNumber: 1, imagePath: newValue)
+                                } catch {
+                                }
+                            }
+                    }
+                }
+            }.padding(10)
+            GroupBox(label:
+                        Label("Statistics", systemImage: "building.columns")
+            ) {
+                StatisticsView(document: $document)
+            }.padding(10)
+        }
 
         HStack{
-            TextEditor(text: $document.serialDriver.log)
-        }
+            GroupBox(label:
+                        Label("Logging", systemImage: "list.bullet")
+            ) {
+                TextEditor(text: $document.serialDriver.host.log)
+            }.padding(10)
+            GroupBox(label:
+                        Label("Virtual Serial Channels", systemImage:
+                                "bolt.horizontal.fill")
+            ) {
+                
+            }.padding(10)
+        }.padding(10)
         
-        SerialPortSelector(selectedPortName: $selectedName, selectedBaudRate: $selectedBaud).onChange(of: selectedName) { oldValue, newValue in
-            document.serialDriver.portName = newValue
-        }.onChange(of: selectedBaud) { oldValue, newValue in
-            document.serialDriver.baudRate = Int(newValue)!
-        }.onDisappear(perform: {
-            document.serialDriver.stop()
-        }).onAppear(perform: {
-            selectedName = document.serialDriver.portName
-            selectedBaud = String(document.serialDriver.baudRate)
-        })
+        GroupBox(label:
+                    Label("Communication", systemImage: "list.bullet")
+        ) {
+            SerialPortSelector(selectedPortName: $selectedName, selectedBaudRate: $selectedBaud).onChange(of: selectedName) { oldValue, newValue in
+                document.serialDriver.portName = newValue
+            }.onChange(of: selectedBaud) { oldValue, newValue in
+                document.serialDriver.baudRate = Int(newValue)!
+            }.onDisappear(perform: {
+                document.serialDriver.stop()
+            }).onAppear(perform: {
+                selectedName = document.serialDriver.portName
+                selectedBaud = String(document.serialDriver.baudRate)
+            }).padding(10)
+        }.padding(10)
     }
 }
 
@@ -146,9 +226,7 @@ class ObservableSerialPortManager: ObservableObject {
 }
 
 
-/*
  #Preview {
     ContentView(document: .constant(DriveWireDocument()))
 }
 
-*/

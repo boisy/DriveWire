@@ -18,7 +18,6 @@ final class DriveWireDocument: FileDocument {
     @Published var serialDriver = DriveWireSerialDriver()
 
     static var readableContentTypes: [UTType] { [.exampleText] }
-
     init() {
     }
 

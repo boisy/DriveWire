@@ -33,14 +33,25 @@ public struct DriveWireStatistics {
     var lastSetStat : UInt8 = 0
     var lastCheckSum : UInt16 = 0
     var lastError : UInt8 = 0
+    var percentReadsOK = 0
+    var percentWritesOK = 0
 }
 
 /// Errors that the DriveWire host throws.
-public enum DriveWireError : Error {
+public enum DriveWireHostError : Error {
     /// There's a virtual drive currently mounted in this slot.
     case driveAlreadyExists
     /// A virtual disk with that name doesn't exist.
     case nameNotFound
+}
+
+/// Error codes that the DriveWire protocol returns.
+///
+/// These error codes are identical to the errors that OS-9 uses.
+public enum DriveWireProtocolError : Int {
+    case E_NONE = 0x00
+    case E_UNIT = 0xF0
+    case E_CRC = 0xF4
 }
 
 /// Manages communication with a DriveWire guest.
@@ -49,7 +60,10 @@ public enum DriveWireError : Error {
 ///
 /// The basis of communication between the guest and host is a documented set of uni- and bi-directional messages called *transactions*. A transaction is a series of one or more packets that the guest and host pass to each other.
 ///
+@Observable
 public class DriveWireHost : Codable {
+    var log : String = ""
+    
     enum CodingKeys: String, CodingKey {
         case virtualDrives
     }
@@ -302,6 +316,10 @@ public class DriveWireHost : Codable {
         setupTransactions()
     }
     
+    init() {
+        
+    }
+    
     /// Inserts a virtual disk into the virtual drive.
     ///
      /// - Parameters:
@@ -309,9 +327,9 @@ public class DriveWireHost : Codable {
     ///     - imagePath: The page the virtual disk image to insert.
     public func insertVirtualDisk(driveNumber : Int, imagePath : String) throws {
         if let _ = virtualDrives.first(where: { $0.driveNumber == driveNumber }) {
-//            ejectVirtualDisk(driveNumber: driveNumber)
+            ejectVirtualDisk(driveNumber: driveNumber)
             // A drive with this number already exists... disallow it.
-            throw DriveWireError.driveAlreadyExists
+//            throw DriveWireHostError.driveAlreadyExists
         }
 
         virtualDrives.append(try VirtualDrive(driveNumber: driveNumber, imagePath: imagePath))
@@ -498,7 +516,7 @@ public class DriveWireHost : Codable {
                 let name = String(bytes: data, encoding: .ascii)!
                 
                 // determine if a named object with this name already exists
-                if let vd = try findVirtualDisk(name: name) {
+                if let _ = findVirtualDisk(name: name) {
                     response = 0
                 } else {
                     let nextFreeDrive = findAvailableVirtualDrive()
@@ -545,6 +563,7 @@ public class DriveWireHost : Codable {
         resetState()
         statistics = DriveWireStatistics()  // reset statistics
         delegate?.transactionCompleted(opCode: currentTransaction)
+        log = log + "OP_INIT" + "\n"
         return 1
     }
     
@@ -552,13 +571,13 @@ public class DriveWireHost : Codable {
         currentTransaction = OPTERM
         resetState()
         delegate?.transactionCompleted(opCode: currentTransaction)
+        log = log + "OP_TERM" + "\n"
         return 1
     }
     
-    // TODO: Complete
     private func OP_WRITE_CORE(data : Data, operation: UInt8) -> Int {
         var result = 0
-        var error = 0
+        var error = DriveWireProtocolError.E_NONE.rawValue
         let expectedCount = 263
         currentTransaction = OPWRITE
         
@@ -567,21 +586,30 @@ public class DriveWireHost : Codable {
             result = expectedCount;
             
             let driveNumber = data[1]
+            statistics.lastDriveNumber = driveNumber
             let vLSN = Int(data[2]) << 16 + Int(data[3]) << 8 + Int(data[4])
+            statistics.lastLSN = vLSN
             let sectorBuffer = data[5..<261]
             let checksum = Int(data[261])*256+Int(data[262])
-            
+
             result = expectedCount;
             
             // Check if the drive number exists in our virtual drive list.
             if let virtualDrive = virtualDrives.first(where: { $0.driveNumber == driveNumber }) {
-                // It exists! Read sector from disk image.
-                statistics.lastDriveNumber = driveNumber
-                statistics.readCount = statistics.readCount + 1
-                error = virtualDrive.writeSector(lsn: vLSN, sector: sectorBuffer)
+                // It exists! Verify checksum.
+                let computedChecksum = compute16BitChecksum(data: sectorBuffer)
+                if computedChecksum == checksum {
+                    // All good. Write sector to disk image.
+                    statistics.lastDriveNumber = driveNumber
+                    statistics.writeCount = statistics.writeCount + 1
+                    statistics.percentWritesOK = (1 - statistics.reWriteCount / statistics.writeCount) * 100
+                    error = virtualDrive.writeSector(lsn: vLSN, sector: sectorBuffer)
+                } else {
+                    error = DriveWireProtocolError.E_CRC.rawValue
+                }
             } else {
                 // It doesn't exist. Set the error code.
-                error = 240;
+                error = DriveWireProtocolError.E_UNIT.rawValue
             }
             
             statistics.lastDriveNumber = driveNumber
@@ -597,6 +625,7 @@ public class DriveWireHost : Codable {
     }
     
     private func OP_REWRITE(data : Data) -> Int {
+        statistics.reWriteCount = statistics.reWriteCount + 1
         return OP_WRITE_CORE(data: data, operation: OPREWRITE)
     }
     
@@ -614,6 +643,7 @@ public class DriveWireHost : Codable {
             delegate?.transactionCompleted(opCode: currentTransaction)
         }
         
+        log = log + "OP_GETSTAT(" + String(statistics.lastDriveNumber) + "," + String(statistics.lastGetStat) + ")" + "\n"
         return result
     }
     
@@ -631,6 +661,7 @@ public class DriveWireHost : Codable {
             delegate?.transactionCompleted(opCode: currentTransaction)
         }
         
+        log = log + "OP_SETSTAT(" + String(statistics.lastDriveNumber) + "," + String(statistics.lastGetStat) + ")" + "\n"
         return result
     }
     
@@ -638,6 +669,7 @@ public class DriveWireHost : Codable {
         currentTransaction = OPRESET
         resetState()
         delegate?.transactionCompleted(opCode: currentTransaction)
+        log = log + "OP_RESET" + "\n"
         return 1
     }
     
@@ -760,6 +792,8 @@ public class DriveWireHost : Codable {
         
         let byte = data[0]
         
+        statistics.lastOpCode = byte
+        
         if byte >= 0x80 && byte <= 0x8E {
             // FASTWRITE serial
             fastwriteChannel = byte & 0x0F;
@@ -785,20 +819,23 @@ public class DriveWireHost : Codable {
 
 extension DriveWireHost {
     private func OP_REREADEX(data : Data) -> Int {
+        statistics.reReadCount = statistics.reReadCount + 1
         return OP_READEX(data: data)
     }
     
     private func OP_READEX(data : Data) -> Int {
         currentTransaction = OPREADEX
         var result = 0
-        var error = 0
+        var error = DriveWireProtocolError.E_NONE.rawValue
         var sectorBuffer = Data(repeating: 0, count: 256)
         var readexChecksum : UInt16 = 0
         
         if data.count >= 5 {
             let driveNumber = data[1]
+            statistics.lastDriveNumber = driveNumber
             let vLSN = Int(data[2]) << 16 + Int(data[3]) << 8 + Int(data[4])
-            
+            statistics.lastLSN = vLSN
+
             // We read 5 bytes into this buffer (OP_READEX, 1 byte drive number, 3 byte LSN)
             result = 5;
             
@@ -807,10 +844,11 @@ extension DriveWireHost {
                 // It exists! Read sector from disk image.
                 statistics.lastDriveNumber = driveNumber
                 statistics.readCount = statistics.readCount + 1
+                statistics.percentReadsOK = (1 - statistics.reReadCount / statistics.readCount) * 100
                 (error, sectorBuffer) = virtualDrive.readSector(lsn: vLSN)
             } else {
                 // It doesn't exist. Set the error code.
-                error = 240;
+                error = DriveWireProtocolError.E_UNIT.rawValue
             }
 
             // Respond with the sector.
@@ -834,7 +872,7 @@ extension DriveWireHost {
                 
                 let guestChecksum = UInt16(data[0]) * 256 + UInt16(data[1])
                 if readexChecksum != guestChecksum {
-                    error = 0xF4; // OS-9 E$CRC error
+                    error = DriveWireProtocolError.E_CRC.rawValue
                 }
                 
                 // Send the response code to the guest.
@@ -849,20 +887,23 @@ extension DriveWireHost {
     }
     
     private func OP_REREAD(data : Data) -> Int {
+        statistics.reReadCount = statistics.reReadCount + 1
         return OP_READ(data: data)
     }
     
     private func OP_READ(data : Data) -> Int {
         currentTransaction = OPREADEX
         var result = 0
-        var error = 0
+        var error = DriveWireProtocolError.E_NONE.rawValue
         var sectorBuffer = Data(repeating: 0, count: 256)
         var readexChecksum : UInt16 = 0
         
         if data.count >= 5 {
             let driveNumber = data[1]
+            statistics.lastDriveNumber = driveNumber
             let vLSN = Int(data[2]) << 16 + Int(data[3]) << 8 + Int(data[4])
-            
+            statistics.lastLSN = vLSN
+
             // We read 5 bytes into this buffer (OP_READEX, 1 byte drive number, 3 byte LSN)
             result = 5;
             
@@ -871,17 +912,18 @@ extension DriveWireHost {
                 // It exists! Read sector from disk image.
                 statistics.lastDriveNumber = driveNumber
                 statistics.readCount = statistics.readCount + 1
+                statistics.percentReadsOK = (1 - statistics.reReadCount / statistics.readCount) * 100
                 (error, sectorBuffer) = virtualDrive.readSector(lsn: vLSN)
             } else {
                 // It doesn't exist. Set the error code.
-                error = 240;
+                error = DriveWireProtocolError.E_UNIT.rawValue
             }
 
             // Send the error code
             delegate?.dataAvailable(host: self, data: Data([UInt8(error)]))
             
             // If we have an OK response, we send the sector and checksum.
-            if error == 0 {
+            if error == DriveWireProtocolError.E_NONE.rawValue {
                 // Compute checksum from sector.
                 readexChecksum = compute16BitChecksum(data: sectorBuffer)
 
@@ -954,6 +996,7 @@ extension DriveWireHost {
         /// The path path where named object files exist.
         var basePath = NSHomeDirectory()
         
+        private var bookmarkData = Data()
         private var storageContainer = Data()
         
         /// Creates a new virtual drive.
@@ -970,7 +1013,14 @@ extension DriveWireHost {
             } else {
                 self.imagePath = basePath + "/" + imagePath
             }
-            self.storageContainer = try Data(contentsOf:(URL(fileURLWithPath: self.imagePath)))
+            
+            do {
+                let u = URL(fileURLWithPath: self.imagePath)
+                self.storageContainer = try Data(contentsOf:u)
+                self.bookmarkData = try u.bookmarkData()
+            } catch {
+                print(error)
+            }
         }
         
         /// Reads a 256 byte sector from a virtual disk.
@@ -988,11 +1038,11 @@ extension DriveWireHost {
                 let range: Range<Data.Index> = offsetStart..<offsetEnd
                 let sector = storageContainer[range]
                 // Send a 256 byte sector of zeros with no error
-                return(0, sector)
+                return(DriveWireProtocolError.E_NONE.rawValue, sector)
             } else {
                 // LSN is past point of capacity of source.
                 // Send a 256 byte sector of zeros with no error
-                return(0, Data(repeating: 0, count: 256))
+                return(DriveWireProtocolError.E_NONE.rawValue, Data(repeating: 0, count: 256))
             }
         }
 
@@ -1017,7 +1067,7 @@ extension DriveWireHost {
                 storageContainer[range] = sector
             }
 
-            return 0
+            return DriveWireProtocolError.E_NONE.rawValue
         }
     }
 }
