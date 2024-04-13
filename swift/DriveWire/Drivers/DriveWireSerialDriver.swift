@@ -77,7 +77,7 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     internal func serialPort(_ serialPort: ORSSerialPort, didReceive data: Data) {
         var d = data
         if logging == true {
-//            data.dump(prefix: "->")
+            data.dump(prefix: "->")
         }
         host.send(data: &d)
     }
@@ -89,7 +89,7 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
     @_documentation(visibility: private)
     internal func dataAvailable(host: DriveWireHost, data: Data) {
         if logging == true {
-//            data.dump(prefix: "<-")
+            data.dump(prefix: "<-")
         }
         serialPort?.send(data)
     }
