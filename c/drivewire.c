@@ -52,37 +52,9 @@ int comClose(struct dwTransferData *dp)
 	return 0;
 }
 
-void setCoCo(struct dwTransferData *dp, int cocoType)
+void setBaud(struct dwTransferData *dp, int baudRate)
 {
-	dp->cocoType = cocoType;
-	switch (cocoType)
-	{
-		case 3:
-			switch (dp->dw_protocol_vrsn)
-			{
-				case 3:
-					dp->baudRate = B115200;
-					break;
-				default:
-					dp->baudRate = B57600;
-					break;
-			}
-			break;
-
-		default:
-			switch (dp->dw_protocol_vrsn)
-			{
-				case 3:
-					dp->baudRate = B57600;
-					break;
-				case 2:
-					dp->baudRate = B38400;
-					break;
-			}
-			break;
-
-	}
-
+	dp->baudRate = baudRate;
 }
 
 void openDSK(struct dwTransferData *dp, int which)
@@ -132,10 +104,10 @@ int loadPreferences(struct dwTransferData *datapack)
 	p = strchr(device, '\n');
 	if (p != NULL) { *p = '\0'; }
 	fgets(buffer, 128, pf);
-	datapack->cocoType = atoi(buffer);
+	datapack->baudRate = atoi(buffer);
 	fgets(buffer, 128, pf);
 	datapack->dw_protocol_vrsn = atoi(buffer);
-	setCoCo(datapack, datapack->cocoType);
+	setBaud(datapack, datapack->baudRate);
 	fgets(datapack->prtcmd, 128, pf);
 
 	return 0;
@@ -162,7 +134,7 @@ int savePreferences(struct dwTransferData *datapack)
 	}
 
 	fprintf(pf, "%s\n", device);
-	fprintf(pf, "%d\n", datapack->cocoType);
+	fprintf(pf, "%d\n", datapack->baudRate);
 	fprintf(pf, "%d\n", datapack->dw_protocol_vrsn);
 	fprintf(pf, "%s\n", datapack->prtcmd);
 
@@ -244,7 +216,7 @@ int main(int argc, char **argv)
         strcpy(dskfile[1], "disk1");
         strcpy(dskfile[2], "disk2");
         strcpy(dskfile[3], "disk3");
-        setCoCo(&datapack, 3); // assume CoCo 3
+        setBaud(&datapack, 3); // assume CoCo 3
         // change EOLs and send to printer
         strcpy(datapack.prtcmd, "| tr \"\\r\" \"\\n\" | lpr");
         // change EOLs and move to file
@@ -363,19 +335,29 @@ int main(int argc, char **argv)
                 {
                     datapack.dw_protocol_vrsn = 1;
                 }
-                setCoCo(&datapack, datapack.cocoType);
+                setBaud(&datapack, datapack.baudRate);
                 comRaw(&datapack);
                 WinUpdate(window0, &datapack);
                 break;
 
-            case 'c':
-                if (datapack.cocoType == 3)
+            case 'b':
+                if (datapack.baudRate == B115200)
                 {
-                    setCoCo(&datapack, 2);
+                    setBaud(&datapack, B230400);
+                }
+                else
+                if (datapack.baudRate == B230400)
+                {
+                    setBaud(&datapack, B57600);
+                }
+                else
+                if (datapack.baudRate == B57600)
+                {
+                    setBaud(&datapack, B115200);
                 }
                 else
                 {
-                    setCoCo(&datapack, 3);
+                    setBaud(&datapack, 230400);
                 }
                 comRaw(&datapack);
                 WinUpdate(window0, &datapack);

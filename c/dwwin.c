@@ -20,7 +20,7 @@ void WinInit(void)
 	}
 
 	wattron(window0, A_STANDOUT);
-	wprintw(window0, "DriveWire Server v%d.%d (C) 2009 Boisy G. Pitre", REV_MAJOR, REV_MINOR);
+	wprintw(window0, "DriveWire Server v%d.%d (C) 2024 Boisy G. Pitre", REV_MAJOR, REV_MINOR);
 	wattroff(window0, A_STANDOUT);
 
 
@@ -59,7 +59,7 @@ void WinSetup(WINDOW *window)
 	wprintw(window, "Last SetStat    :");
         y++;
 	wmove(window, y++, 1);
-	wprintw(window, "CoCo Type       :");
+	wprintw(window, "Baud Rate       :");
 	wmove(window, y++, 1);
 	wprintw(window, "Serial Port     :");
 	wmove(window, y++, 1);
@@ -80,7 +80,7 @@ void WinSetup(WINDOW *window)
 	wmove(window, y++, 1);
 
 	wattron(window, A_STANDOUT);
-	wprintw(window, "[0-3] Disk   [C]oCo   [P]ort   [R]eset   [M]ode   [L]Print   [Q]uit");
+	wprintw(window, "[0-3] Disk   [B]aud   [P]ort   [R]eset   [M]ode   [L]Print   [Q]uit");
 	wattroff(window, A_STANDOUT);
 
 	/* 2. Refresh */
@@ -212,29 +212,23 @@ void WinUpdate(WINDOW *window, struct dwTransferData *dp)
 	wprintw(window, "$%02X (%s)", dp->lastSetStat, getStatCode(dp->lastSetStat));
 	wmove(window, y++, x); wclrtoeol(window);
 	wmove(window, y++, x); wclrtoeol(window);
-	switch (dp->cocoType)
+	switch (dp->baudRate)
 	{
-		case 3:
-			if (dp->dw_protocol_vrsn == 3)
-			{
-				wprintw(window, "%s", "CoCo 3 (115200 baud)");
-			}
-			else
-			{
-				wprintw(window, "%s", "CoCo 3 (57600 baud)");
-			}
-			break;
+		case B230400:
+				wprintw(window, "%s", "230400 baud");
+				break;
 
-		case 2:
-			if (dp->dw_protocol_vrsn == 3)
-			{
-				wprintw(window, "%s", "CoCo 2 (57600 baud)");
-			}
-			else
-			{
-				wprintw(window, "%s", "CoCo 1/2 (38400 baud)");
-			}
-			break;
+		case B115200:
+				wprintw(window, "%s", "115200 baud");
+				break;
+
+		case B57600:
+				wprintw(window, "%s", "57600 baud");
+				break;
+
+		default:
+				wprintw(window, "%s", "Undefined");
+				break;
 	}
 	wmove(window, y++, x); wclrtoeol(window);
 	wprintw(window, "%s", device);
