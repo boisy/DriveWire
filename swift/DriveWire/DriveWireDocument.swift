@@ -37,6 +37,7 @@ final class DriveWireDocument: FileDocument {
         }
     }
 
+    #if false
     struct AppShortcuts: AppShortcutsProvider {
         @AppShortcutsBuilder
         static var appShortcuts: [AppShortcut] {
@@ -48,6 +49,7 @@ final class DriveWireDocument: FileDocument {
             )
         }
     }
+    #endif
 
     init(configuration: ReadConfiguration) throws {
         guard let data = configuration.file.regularFileContents
