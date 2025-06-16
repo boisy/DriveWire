@@ -13,6 +13,8 @@
 		6818E8112AC7786C00CD3A16 /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 6818E8102AC7786C00CD3A16 /* CocoaLumberjack */; };
 		6818E8132AC7786C00CD3A16 /* CocoaLumberjackSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6818E8122AC7786C00CD3A16 /* CocoaLumberjackSwift */; };
 		6818E8152AC7786C00CD3A16 /* CocoaLumberjackSwiftLogBackend in Frameworks */ = {isa = PBXBuildFile; productRef = 6818E8142AC7786C00CD3A16 /* CocoaLumberjackSwiftLogBackend */; };
+		683743302E001C03003BCE8D /* DriveWireTCPDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6837432F2E001C03003BCE8D /* DriveWireTCPDriver.swift */; };
+		683743312E001C03003BCE8D /* DriveWireTCPDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6837432F2E001C03003BCE8D /* DriveWireTCPDriver.swift */; };
 		686E2FC52AC8A5B200F94CFD /* DriveWire.docc in Sources */ = {isa = PBXBuildFile; fileRef = 686E2FC42AC8A5B200F94CFD /* DriveWire.docc */; };
 		689F4F1B2BAF2086000FED7D /* LEDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689F4F1A2BAF2086000FED7D /* LEDView.swift */; };
 		68A4A0CF2AC723290041F161 /* DriveWireApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A4A0CE2AC723290041F161 /* DriveWireApp.swift */; };
@@ -54,6 +56,7 @@
 /* Begin PBXFileReference section */
 		68015B842AD470CB00AB717A /* DriveWireCmd.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = DriveWireCmd.xctestplan; sourceTree = "<group>"; };
 		6818E5A02AC9D5E200A6C300 /* DriveWireHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveWireHost.swift; sourceTree = "<group>"; };
+		6837432F2E001C03003BCE8D /* DriveWireTCPDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveWireTCPDriver.swift; sourceTree = "<group>"; };
 		686E2FC42AC8A5B200F94CFD /* DriveWire.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = DriveWire.docc; sourceTree = "<group>"; };
 		689F4F1A2BAF2086000FED7D /* LEDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LEDView.swift; sourceTree = "<group>"; };
 		68A4A0CB2AC723290041F161 /* DriveWire.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DriveWire.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -162,6 +165,7 @@
 		68A4A0F42AC723C00041F161 /* Drivers */ = {
 			isa = PBXGroup;
 			children = (
+				6837432F2E001C03003BCE8D /* DriveWireTCPDriver.swift */,
 				68A4A0ED2AC723820041F161 /* DriveWireSerialDriver.swift */,
 			);
 			path = Drivers;
@@ -332,6 +336,7 @@
 				68A4A0EF2AC723820041F161 /* DriveWireSerialDriver.swift in Sources */,
 				689F4F1B2BAF2086000FED7D /* LEDView.swift in Sources */,
 				686E2FC52AC8A5B200F94CFD /* DriveWire.docc in Sources */,
+				683743302E001C03003BCE8D /* DriveWireTCPDriver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,6 +353,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				683743312E001C03003BCE8D /* DriveWireTCPDriver.swift in Sources */,
 				68A842102AD329B6009BE6D3 /* main.swift in Sources */,
 				68A842142AD3329A009BE6D3 /* DriveWireHost.swift in Sources */,
 				6809D2E02B25410F0092A869 /* DriveWire.docc in Sources */,
@@ -498,7 +504,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DriveWire/Preview Content\"";
-				DEVELOPMENT_TEAM = TL7WA9KV8Z;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DriveWire/Info.plist;
@@ -526,7 +532,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DriveWire/Preview Content\"";
-				DEVELOPMENT_TEAM = TL7WA9KV8Z;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DriveWire/Info.plist;

@@ -9,6 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 import ORSSerial
 import AppIntents
+
 extension UTType {
     static var exampleText: UTType {
         UTType(importedAs: "com.boisypitre.drivewire-document")
@@ -17,6 +18,7 @@ extension UTType {
 
 final class DriveWireDocument: FileDocument {
     @Published var serialDriver = DriveWireSerialDriver()
+    @Published var tcpDriver = DriveWireTCPDriver()
 
     static var readableContentTypes: [UTType] { [.exampleText] }
 
@@ -33,7 +35,8 @@ final class DriveWireDocument: FileDocument {
           // reload
             
             hostProvider.reloadVirtualDrives()
-          return .result()
+            
+            return .result()
         }
     }
 
@@ -57,6 +60,7 @@ final class DriveWireDocument: FileDocument {
             throw CocoaError(.fileReadCorruptFile)
         }
         self.serialDriver = try JSONDecoder().decode(DriveWireSerialDriver.self, from: data)
+        self.tcpDriver = try JSONDecoder().decode(DriveWireTCPDriver.self, from: data)
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {

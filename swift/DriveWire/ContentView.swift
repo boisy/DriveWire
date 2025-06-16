@@ -86,6 +86,25 @@ struct SerialPortSelector: View {
     }
 }
 
+struct IPAddressSelector: View {
+    @Binding var selectedIPAddress : String
+    @Binding var selectedIPPort : String
+    let labelWidth = 80.0
+    
+     var body: some View {
+         VStack {
+             HStack {
+                 Text("IP Address:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", text: $selectedIPAddress)
+             }
+             HStack {
+                 Text("IP Port:").frame(width: labelWidth, alignment: .trailing)
+                 TextField("", text: $selectedIPPort)
+             }
+        }
+    }
+}
+
 struct StatisticsView: View {
     @Binding var document: DriveWireDocument
 
@@ -146,14 +165,52 @@ struct StatisticsView: View {
     }
 }
 
+struct SerialCommsView : View {
+    @Binding var document: DriveWireDocument
+    @Binding var portName: String
+    @Binding var baudRate: String
+
+    var body: some View {
+        SerialPortSelector(selectedPortName: $portName, selectedBaudRate: $baudRate).onChange(of: portName) { oldValue, newValue in
+            document.serialDriver.portName = newValue
+        }.onChange(of: baudRate) { oldValue, newValue in
+            document.serialDriver.baudRate = Int(newValue)!
+        }.onDisappear(perform: {
+            document.serialDriver.stop()
+        }).onAppear(perform: {
+            portName = document.serialDriver.portName
+            baudRate = String(document.serialDriver.baudRate)
+        }).padding(10)
+    }
+}
+
+struct TCPCommsView : View {
+    @Binding var document: DriveWireDocument
+    @Binding var ipAddress: String
+    @Binding var ipPort: String
+
+    var body: some View {
+        IPAddressSelector(selectedIPAddress: $ipAddress, selectedIPPort: $ipPort)
+    }
+}
+
 struct ContentView: View {
     @Binding var document: DriveWireDocument
     @State var selectedName = "NONE"
     @State var selectedBaud = "57600"
+    @State var selectedIPAddress = "192.168.0.10"
+    @State var selectedIPPort = "6809"
     @State var selectedDisk0 = ""
     @State var selectedDisk1 = ""
     @State var selectedDisk2 = ""
     @State var selectedDisk3 = ""
+
+    enum ConnectionType: String, CaseIterable, Identifiable {
+        case serial, network
+        var id: String { rawValue }
+    }
+
+    @State private var connectionType: ConnectionType = .serial
 
     var body: some View {
         HStack {
@@ -194,7 +251,7 @@ struct ContentView: View {
                 }
             }.padding(10)
             GroupBox(label:
-                        Label("Statistics", systemImage: "building.columns")
+                Label("Statistics", systemImage: "building.columns")
             ) {
                 StatisticsView(document: $document)
             }.padding(10)
@@ -202,26 +259,30 @@ struct ContentView: View {
 
         HStack{
             GroupBox(label:
-                        Label("Communication", systemImage: "list.bullet")
+                Label("Communication", systemImage: "list.bullet")
             ) {
-                SerialPortSelector(selectedPortName: $selectedName, selectedBaudRate: $selectedBaud).onChange(of: selectedName) { oldValue, newValue in
-                    document.serialDriver.portName = newValue
-                }.onChange(of: selectedBaud) { oldValue, newValue in
-                    document.serialDriver.baudRate = Int(newValue)!
-                }.onDisappear(perform: {
-                    document.serialDriver.stop()
-                }).onAppear(perform: {
-                    selectedName = document.serialDriver.portName
-                    selectedBaud = String(document.serialDriver.baudRate)
-                }).padding(10)
-            }.padding(10)
+                Picker("Connection Type", selection: $connectionType) {
+                    ForEach(ConnectionType.allCases) { type in
+                        Text(type.rawValue.capitalized).tag(type)
+                    }
+                }
+                .pickerStyle(.radioGroup)
+
+                if connectionType == .serial {
+                    // Show serial UI
+                    SerialCommsView(document: $document, portName: $selectedName, baudRate: $selectedBaud)
+                } else {
+                    // Show TCP/IP UI
+                    TCPCommsView(document: $document, ipAddress: $selectedIPAddress, ipPort: $selectedIPPort)
+                }
+            }
 
             VirtualChannelsView().padding(10)
 
         }.padding(10)
         
         GroupBox(label:
-                    Label("Logging", systemImage: "list.bullet")
+            Label("Logging", systemImage: "list.bullet")
         ) {
             TextEditor(text: $document.serialDriver.host.log)
         }.padding(10)
