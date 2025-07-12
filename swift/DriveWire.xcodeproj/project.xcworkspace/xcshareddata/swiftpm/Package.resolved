@@ -1,4 +1,5 @@
 {
+  "originHash" : "6808062752a61e59a0269f40427386c783e05c05db4b9d052c05b76c153a89ca",
   "pins" : [
     {
       "identity" : "cocoalumberjack",
@@ -19,6 +20,15 @@
       }
     },
     {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "309a47b2b1d9b5e991f36961c983ecec72275be3",
+        "version" : "1.6.1"
+      }
+    },
+    {
       "identity" : "swift-log",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
@@ -28,5 +38,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

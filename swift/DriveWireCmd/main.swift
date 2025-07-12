@@ -6,19 +6,55 @@
 //
 
 import Foundation
+import ArgumentParser
 
-let d = DriveWireSerialDriver(portName: "/dev/cu.usbserial-FTVA079L", baudRate: 57600)
-//let d = DriveWireSerialDriver(serialPort: "/dev/cu.usbserial-FT079LCR3", baudRate: 230400)
-d.logging = true
-do {
-//    try d.host?.insertVirtualDisk(driveNumber: 0, imagePath: "/Users/boisy/Projects/coco-shelf/nitros9/level1/f256/NOS9_6809_L1_v030300_f256_dw.dsk")
-//    try d.host?.insertVirtualDisk(driveNumber: 0, imagePath: "/Users/boisy/Projects/coco-shelf/nitros9/level2 /f256/NOS9_6809_L2_v030300_f256_dw.dsk")
-//    try d.host?.insertVirtualDisk(driveNumber: 1, imagePath: "/Users/boisy/Downloads/DynaCalc (Tandy) (OS-9)/dyncalc.dsk")
-//    try d.host?.insertVirtualDisk(driveNumber: 1, imagePath: "/Users/boisy/Downloads/Rogue (Tandy) (OS-9) (Coco 3)/ROGUE512.DSK")
-    try d.host?.insertVirtualDisk(driveNumber: 0, imagePath: "/Users/boisy/Projects/coco-shelf/nitros9/level1/atari/NOS9_6809_L1_v030300_atari.dsk")
-} catch {
-    
+struct DriveWireCmd: ParsableCommand {
+    @Option(name: .shortAndLong, help: "Serial port path (e.g. /dev/cu.usbserial-FTVA079L)")
+    var port: String
+
+    @Option(name: .shortAndLong, help: "Baud rate for the serial port")
+    var baudRate: Int = 57600
+
+    @Option(name: .long, help: "Virtual disk image path to insert into drive 0")
+    var disk0: String?
+
+    @Option(name: .long, help: "Virtual disk image path to insert into drive 1")
+    var disk1: String?
+
+    @Option(name: .long, help: "Virtual disk image path to insert into drive 2")
+    var disk2: String?
+
+    @Option(name: .long, help: "Virtual disk image path to insert into drive 3")
+    var disk3: String?
+
+    func run() throws {
+        let d = DriveWireSerialDriver()
+        
+        d.baudRate = baudRate
+        d.portName = port
+        d.logging = true
+
+        if let disk0Path = disk0 {
+            try d.host.insertVirtualDisk(driveNumber: 0, imagePath: disk0Path)
+        }
+        
+        if let disk1Path = disk1 {
+            try d.host.insertVirtualDisk(driveNumber: 1, imagePath: disk1Path)
+        }
+        
+        if let disk2Path = disk2 {
+            try d.host.insertVirtualDisk(driveNumber: 2, imagePath: disk2Path)
+        }
+        
+        if let disk3Path = disk3 {
+            try d.host.insertVirtualDisk(driveNumber: 3, imagePath: disk3Path)
+        }
+        
+        while true {
+            RunLoop.current.run(mode: .default, before: Date.distantFuture)
+        }
+    }
 }
 
-print("Hello, World!")
+DriveWireCmd.main()
 

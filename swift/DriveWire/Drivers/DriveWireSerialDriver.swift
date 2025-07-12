@@ -99,26 +99,6 @@ class DriveWireSerialDriver : NSObject, DriveWireDelegate, ORSSerialPortDelegate
         host = DriveWireHost(delegate: self)
     }
     
-    /// Create a driver that connects to a serial port.
-    ///
-    /// - Parameters:
-    ///     - serialPort: The name of the serial port device to connect to.
-    convenience init(serialPort: String) {
-        self.init(portName: serialPort, baudRate: 230400)
-    }
-    
-    /// Create a driver that connects to a serial port with a specific baud rate.
-    ///
-    /// - Parameters:
-    ///     - serialPort: The name of the serial port device to connect to.
-    ///     - baudRate: The number of bits per second of the device.
-    init(portName: String, baudRate: NSNumber) {
-        super.init()
-        host = DriveWireHost(delegate: self)
-        self.serialPort = ORSSerialPort(path: portName)
-        self.portName = portName
-    }
-    
     required init(from decoder: Decoder) throws {
         super.init()
         do {

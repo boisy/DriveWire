@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		68003A292E22901800DA741F /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 68003A282E22901800DA741F /* ArgumentParser */; };
 		6809D2E02B25410F0092A869 /* DriveWire.docc in Sources */ = {isa = PBXBuildFile; fileRef = 686E2FC42AC8A5B200F94CFD /* DriveWire.docc */; };
 		6818E5A12AC9D5E200A6C300 /* DriveWireHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6818E5A02AC9D5E200A6C300 /* DriveWireHost.swift */; };
 		6818E5A22AC9D6A200A6C300 /* DriveWireHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6818E5A02AC9D5E200A6C300 /* DriveWireHost.swift */; };
@@ -98,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68003A292E22901800DA741F /* ArgumentParser in Frameworks */,
 				68A842182AD3697C009BE6D3 /* ORSSerial in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -254,6 +256,7 @@
 			name = DriveWireCmd;
 			packageProductDependencies = (
 				68A842172AD3697C009BE6D3 /* ORSSerial */,
+				68003A282E22901800DA741F /* ArgumentParser */,
 			);
 			productName = DriveWireCmd;
 			productReference = 68A8420D2AD329B6009BE6D3 /* DriveWireCmd */;
@@ -266,7 +269,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1430;
+				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					68A4A0CA2AC723290041F161 = {
@@ -293,14 +296,15 @@
 			packageReferences = (
 				68A4A0F12AC723920041F161 /* XCRemoteSwiftPackageReference "ORSSerialPort" */,
 				6818E80F2AC7786C00CD3A16 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */,
+				68003A272E22901800DA741F /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 			);
 			productRefGroup = 68A4A0CC2AC723290041F161 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				68A4A0CA2AC723290041F161 /* DriveWire */,
-				68A4A0E32AC723670041F161 /* DriveWireTests */,
 				68A8420C2AD329B6009BE6D3 /* DriveWireCmd */,
+				68A4A0E32AC723670041F161 /* DriveWireTests */,
 			);
 		};
 /* End PBXProject section */
@@ -587,7 +591,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				MACOSX_DEPLOYMENT_TARGET = 13.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_VERSION = 5.0;
@@ -599,7 +603,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				MACOSX_DEPLOYMENT_TARGET = 13.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -648,6 +652,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		68003A272E22901800DA741F /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.1;
+			};
+		};
 		6818E80F2AC7786C00CD3A16 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CocoaLumberjack/CocoaLumberjack.git";
@@ -667,6 +679,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		68003A282E22901800DA741F /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 68003A272E22901800DA741F /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
+		};
 		6818E8102AC7786C00CD3A16 /* CocoaLumberjack */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 6818E80F2AC7786C00CD3A16 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;

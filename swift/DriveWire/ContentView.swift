@@ -205,13 +205,6 @@ struct ContentView: View {
     @State var selectedDisk2 = ""
     @State var selectedDisk3 = ""
 
-    enum ConnectionType: String, CaseIterable, Identifiable {
-        case serial, network
-        var id: String { rawValue }
-    }
-
-    @State private var connectionType: ConnectionType = .serial
-
     var body: some View {
         HStack {
             GroupBox(label:
@@ -261,14 +254,14 @@ struct ContentView: View {
             GroupBox(label:
                 Label("Communication", systemImage: "list.bullet")
             ) {
-                Picker("Connection Type", selection: $connectionType) {
-                    ForEach(ConnectionType.allCases) { type in
+                Picker("Connection Type", selection: $document.connectionType) {
+                    ForEach(DriveWireDocument.ConnectionType.allCases) { type in
                         Text(type.rawValue.capitalized).tag(type)
                     }
                 }
                 .pickerStyle(.radioGroup)
 
-                if connectionType == .serial {
+                if document.connectionType == .serial {
                     // Show serial UI
                     SerialCommsView(document: $document, portName: $selectedName, baudRate: $selectedBaud)
                 } else {
