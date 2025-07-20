@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "68A8420C2AD329B6009BE6D3"
-               BuildableName = "DriveWireCmd"
-               BlueprintName = "DriveWireCmd"
+               BuildableName = "drivewire-cli"
+               BlueprintName = "drivewire-cli"
                ReferencedContainer = "container:DriveWire.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:DriveWireCmd.xctestplan"
+            reference = "container:drivewire-cli.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -50,8 +50,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "68A8420C2AD329B6009BE6D3"
-            BuildableName = "DriveWireCmd"
-            BlueprintName = "DriveWireCmd"
+            BuildableName = "drivewire-cli"
+            BlueprintName = "drivewire-cli"
             ReferencedContainer = "container:DriveWire.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -93,8 +93,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "68A8420C2AD329B6009BE6D3"
-            BuildableName = "DriveWireCmd"
-            BlueprintName = "DriveWireCmd"
+            BuildableName = "drivewire-cli"
+            BlueprintName = "drivewire-cli"
             ReferencedContainer = "container:DriveWire.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

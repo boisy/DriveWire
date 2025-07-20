@@ -55,7 +55,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		68015B842AD470CB00AB717A /* DriveWireCmd.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = DriveWireCmd.xctestplan; sourceTree = "<group>"; };
+		68015B842AD470CB00AB717A /* drivewire-cli.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "drivewire-cli.xctestplan"; sourceTree = "<group>"; };
 		6818E5A02AC9D5E200A6C300 /* DriveWireHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveWireHost.swift; sourceTree = "<group>"; };
 		6837432F2E001C03003BCE8D /* DriveWireTCPDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveWireTCPDriver.swift; sourceTree = "<group>"; };
 		686E2FC42AC8A5B200F94CFD /* DriveWire.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = DriveWire.docc; sourceTree = "<group>"; };
@@ -71,7 +71,7 @@
 		68A4A0E42AC723670041F161 /* DriveWireTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DriveWireTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		68A4A0E62AC723670041F161 /* DriveWireTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveWireTests.swift; sourceTree = "<group>"; };
 		68A4A0ED2AC723820041F161 /* DriveWireSerialDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveWireSerialDriver.swift; sourceTree = "<group>"; };
-		68A8420D2AD329B6009BE6D3 /* DriveWireCmd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DriveWireCmd; sourceTree = BUILT_PRODUCTS_DIR; };
+		68A8420D2AD329B6009BE6D3 /* drivewire-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "drivewire-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		68A8420F2AD329B6009BE6D3 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		68A8421B2AD4378E009BE6D3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,10 +111,10 @@
 			isa = PBXGroup;
 			children = (
 				68A8421B2AD4378E009BE6D3 /* README.md */,
-				68015B842AD470CB00AB717A /* DriveWireCmd.xctestplan */,
+				68015B842AD470CB00AB717A /* drivewire-cli.xctestplan */,
 				68A4A0CD2AC723290041F161 /* DriveWire */,
 				68A4A0E52AC723670041F161 /* DriveWireTests */,
-				68A8420E2AD329B6009BE6D3 /* DriveWireCmd */,
+				68A8420E2AD329B6009BE6D3 /* drivewire-cli */,
 				68A4A0CC2AC723290041F161 /* Products */,
 				68A842162AD3697C009BE6D3 /* Frameworks */,
 			);
@@ -125,7 +125,7 @@
 			children = (
 				68A4A0CB2AC723290041F161 /* DriveWire.app */,
 				68A4A0E42AC723670041F161 /* DriveWireTests.xctest */,
-				68A8420D2AD329B6009BE6D3 /* DriveWireCmd */,
+				68A8420D2AD329B6009BE6D3 /* drivewire-cli */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -181,12 +181,12 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		68A8420E2AD329B6009BE6D3 /* DriveWireCmd */ = {
+		68A8420E2AD329B6009BE6D3 /* drivewire-cli */ = {
 			isa = PBXGroup;
 			children = (
 				68A8420F2AD329B6009BE6D3 /* main.swift */,
 			);
-			path = DriveWireCmd;
+			path = "drivewire-cli";
 			sourceTree = "<group>";
 		};
 		68A842162AD3697C009BE6D3 /* Frameworks */ = {
@@ -240,9 +240,9 @@
 			productReference = 68A4A0E42AC723670041F161 /* DriveWireTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		68A8420C2AD329B6009BE6D3 /* DriveWireCmd */ = {
+		68A8420C2AD329B6009BE6D3 /* drivewire-cli */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 68A842132AD329B6009BE6D3 /* Build configuration list for PBXNativeTarget "DriveWireCmd" */;
+			buildConfigurationList = 68A842132AD329B6009BE6D3 /* Build configuration list for PBXNativeTarget "drivewire-cli" */;
 			buildPhases = (
 				68A842092AD329B6009BE6D3 /* Sources */,
 				68A8420A2AD329B6009BE6D3 /* Frameworks */,
@@ -253,13 +253,13 @@
 			dependencies = (
 				68A8421A2AD369E7009BE6D3 /* PBXTargetDependency */,
 			);
-			name = DriveWireCmd;
+			name = "drivewire-cli";
 			packageProductDependencies = (
 				68A842172AD3697C009BE6D3 /* ORSSerial */,
 				68003A282E22901800DA741F /* ArgumentParser */,
 			);
 			productName = DriveWireCmd;
-			productReference = 68A8420D2AD329B6009BE6D3 /* DriveWireCmd */;
+			productReference = 68A8420D2AD329B6009BE6D3 /* drivewire-cli */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -303,7 +303,7 @@
 			projectRoot = "";
 			targets = (
 				68A4A0CA2AC723290041F161 /* DriveWire */,
-				68A8420C2AD329B6009BE6D3 /* DriveWireCmd */,
+				68A8420C2AD329B6009BE6D3 /* drivewire-cli */,
 				68A4A0E32AC723670041F161 /* DriveWireTests */,
 			);
 		};
@@ -640,7 +640,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		68A842132AD329B6009BE6D3 /* Build configuration list for PBXNativeTarget "DriveWireCmd" */ = {
+		68A842132AD329B6009BE6D3 /* Build configuration list for PBXNativeTarget "drivewire-cli" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				68A842112AD329B6009BE6D3 /* Debug */,
