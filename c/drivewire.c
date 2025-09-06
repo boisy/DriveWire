@@ -274,7 +274,7 @@ int main(int argc, char **argv)
 
     if (comOpen(&datapack, device) < 0)
     {
-        fprintf(stderr, "Couldn't open %s (error %d)\n", device, errno);
+        fprintf(stderr, "Couldn't open /dev/%s (error %d)\n", device, errno);
         
         exit(0);
     }
