@@ -341,14 +341,14 @@ int main(int argc, char **argv)
                 break;
 
             case 'b':
+                if (datapack.baudRate == B230400)
+                {
+                    setBaud(&datapack, B38400);
+                }
+                else
                 if (datapack.baudRate == B115200)
                 {
                     setBaud(&datapack, B230400);
-                }
-                else
-                if (datapack.baudRate == B230400)
-                {
-                    setBaud(&datapack, B57600);
                 }
                 else
                 if (datapack.baudRate == B57600)
@@ -356,8 +356,9 @@ int main(int argc, char **argv)
                     setBaud(&datapack, B115200);
                 }
                 else
+                if (datapack.baudRate == B38400)
                 {
-                    setBaud(&datapack, 230400);
+                    setBaud(&datapack, B57600);
                 }
                 comRaw(&datapack);
                 WinUpdate(window0, &datapack);
